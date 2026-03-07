@@ -53,10 +53,11 @@ class Set(Base):
     )
 
     exercise: Mapped[str] = mapped_column(nullable=False)
-    set_number: Mapped[int] = mapped_column(autoincrement=True, nullable=True)
+    # TODO: Autoincrement set_number based on session_id?
+    set_number: Mapped[int] = mapped_column(nullable=True)
     reps: Mapped[int] = mapped_column(nullable=False)
     weight: Mapped[int] = mapped_column(server_default="0", nullable=False)
-    rest: Mapped[int|None] = mapped_column(nullable=False)
+    rest: Mapped[int|None] = mapped_column(nullable=True)
 
     session: Mapped["WorkoutSession"] = relationship(back_populates="sets")
 
