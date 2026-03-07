@@ -17,7 +17,7 @@ class User(Base):
     email: Mapped[str] = mapped_column(unique=True, nullable=False)
     hashed_password: Mapped[str] = mapped_column(nullable=False)
 
-    sessions: Mapped[List["WorkoutSession"]] = relationship(back_populates="user")
+    workouts: Mapped[List["WorkoutSession"]] = relationship(back_populates="user")
 
 
 class WorkoutSession(Base):
@@ -36,10 +36,11 @@ class WorkoutSession(Base):
         nullable=False,
     )
 
+    name: Mapped[str] = mapped_column(nullable=False)
     notes: Mapped[str|None] = mapped_column(nullable=True)
 
-    user: Mapped["User"] = relationship(back_populates="sessions")
-    sets: Mapped[List["Set"]] = relationship(back_populates="session")
+    user: Mapped["User"] = relationship(back_populates="workouts")
+    sets: Mapped[List["Set"]] = relationship(back_populates="workout")
 
 
 class Set(Base):
@@ -47,7 +48,7 @@ class Set(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    session_id: Mapped[int] = mapped_column(
+    workout_id: Mapped[int] = mapped_column(
         ForeignKey("workout_sessions.id"),
         nullable=False
     )
@@ -59,7 +60,7 @@ class Set(Base):
     weight: Mapped[int] = mapped_column(server_default="0", nullable=False)
     rest: Mapped[int|None] = mapped_column(nullable=True)
 
-    session: Mapped["WorkoutSession"] = relationship(back_populates="sets")
+    workout: Mapped["WorkoutSession"] = relationship(back_populates="sets")
 
 
 if __name__ == "__main__":
