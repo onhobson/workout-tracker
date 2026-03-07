@@ -11,19 +11,26 @@ def seed():
     db.commit()
     db.refresh(user)
 
-    workout = WorkoutSession(
-        user_id=user.id,
-        notes="Sample workout",
-    )
+    workouts = [
+        WorkoutSession(
+            user_id=user.id,
+            name="Sample workout",
+            notes="Sample note",
+        ),
+        WorkoutSession(
+            user_id=user.id,
+            name="Empty workout",
+        ),
+    ]
 
-    db.add(workout)
+    db.add_all(workouts)
     db.commit()
-    db.refresh(workout)
+    db.refresh(workouts[0])
 
     sets = [
-        Set(session_id=workout.id, exercise="Bench Press", set_number=1, reps=8, weight=120),
-        Set(session_id=workout.id, exercise="Bench Press", set_number=2, reps=6, weight=135),
-        Set(session_id=workout.id, exercise="Shoulder Press", set_number=3, reps=8, weight=100),
+        Set(workout_id=workouts[0].id, exercise="Bench Press", set_number=1, reps=8, weight=120),
+        Set(workout_id=workouts[0].id, exercise="Bench Press", set_number=2, reps=6, weight=135),
+        Set(workout_id=workouts[0].id, exercise="Shoulder Press", set_number=3, reps=8, weight=100),
     ]
 
     db.add_all(sets)
