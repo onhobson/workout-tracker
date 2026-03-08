@@ -3,7 +3,7 @@ from typing import Sequence
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from db.models import Set
+from app.db.models import Set
 
 def get_set(set_id: int, db: Session) -> Set | None:
     stmt = select(Set).where(Set.id == set_id)

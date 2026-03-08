@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
-from schemas.set import SetRead
+from app.schemas.set import SetRead
 
 class WorkoutBase(BaseModel):
     name: str

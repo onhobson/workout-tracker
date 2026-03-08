@@ -3,7 +3,7 @@ from typing import Sequence
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from db.models import User
+from app.db.models import User
 
 
 def get_user(user_id: int, db: Session) -> User | None:

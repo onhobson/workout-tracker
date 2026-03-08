@@ -3,7 +3,7 @@ from typing import Sequence
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from db.models import WorkoutSession
+from app.db.models import WorkoutSession
 
 def get_workout(workout_id: int, db: Session) -> WorkoutSession | None:
     stmt = select(WorkoutSession).where(WorkoutSession.id == workout_id)

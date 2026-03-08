@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from schemas.workout import WorkoutRead
+from app.schemas.workout import WorkoutRead
 
 
 class UserBase(BaseModel):
