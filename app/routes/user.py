@@ -4,7 +4,7 @@ from app.crud import user as crud_user
 from app.dependencies import *
 from app.schemas.user import UserRead
 
-router = APIRouter(prefix="/user", tags=["User"])
+router = APIRouter(prefix="/users", tags=["Users"])
 
 
 @router.get("/{user_id}", response_model=UserRead)

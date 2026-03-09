@@ -4,7 +4,7 @@ from app.crud import set as crud_set
 from app.dependencies import *
 from app.schemas.set import SetRead
 
-router = APIRouter(prefix="/set", tags=["Set"])
+router = APIRouter(prefix="/sets", tags=["Sets"])
 
 
 @router.get("/{set_id}", response_model=SetRead)
