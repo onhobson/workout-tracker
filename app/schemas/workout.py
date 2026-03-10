@@ -11,6 +11,7 @@ class WorkoutBase(BaseModel):
 
 class WorkoutCreate(BaseModel):
     name: str | None = None
+    notes: str | None = None
 
 
 class WorkoutRead(WorkoutBase):
