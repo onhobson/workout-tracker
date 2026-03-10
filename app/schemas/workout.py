@@ -26,7 +26,6 @@ class WorkoutRead(WorkoutBase):
 
 
 class WorkoutUpdate(BaseModel):
-    id: int
     name: str | None = None
     notes: str | None = None
     
