@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, status
 
 from app.crud import user as crud_user
 from app.dependencies import *
@@ -7,6 +7,11 @@ from app.schemas.user import UserRead
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
-@router.get("/{user_id}", response_model=UserRead)
+@router.get("/", response_model=UserRead)
 def get_user(user: CurrentUser, db: DbSession):
-    return crud_user.get_user(user.id, db)
+    user_found = crud_user.get_user(user.id, db)
+
+    if not user_found:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+    return user_found
