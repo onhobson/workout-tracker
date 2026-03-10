@@ -13,5 +13,5 @@ Session = sessionmaker(
 )
 
 def get_session():
-    with Session.begin() as session:
+    with Session() as session:
         yield session
