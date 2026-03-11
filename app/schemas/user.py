@@ -4,7 +4,7 @@ from app.schemas.workout import WorkoutRead
 
 
 class UserBase(BaseModel):
-    name: str
+    username: str
     email: EmailStr
 
 
@@ -22,6 +22,6 @@ class UserRead(UserBase):
 
 
 class UserUpdate(BaseModel):
-    name: str | None = None
+    username: str | None = None
     email: EmailStr | None = None
     password: str | None = None
