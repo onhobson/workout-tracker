@@ -17,13 +17,11 @@ class UserRead(UserBase):
 
     workouts: list[WorkoutRead]
 
-
-class UserReadSecret(UserBase):
-    id: int
-    hashed_password: str
+    class Config:
+        from_attributes = True
 
 
 class UserUpdate(BaseModel):
-    name: str | None
-    email: EmailStr | None
-    password: str | None
+    name: str | None = None
+    email: EmailStr | None = None
+    password: str | None = None
