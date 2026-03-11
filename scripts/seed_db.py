@@ -5,7 +5,11 @@ from app.db.models import User, WorkoutSession, Set
 def seed():
     db = Session()
 
-    user = User(name="Sample User", email="email@example.com", password="12345")
+    user = User( # pw = 12345
+        username="SampleUser", 
+        email="email@example.com", 
+        password="$argon2id$v=19$m=65536,t=3,p=4$4UBJ9OsZrPs4HYb8ADuhVA$2zLNSop23Cc1rWY9kbcOnnhDOaSQ1yp7SIbWxUneJ/U",
+    )
 
     db.add(user)
     db.commit()

@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, status
 
 from app.crud import user as crud_user
 from app.dependencies import *
-from app.schemas.user import UserRead
+from app.schemas.user import UserCreate, UserRead
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -21,3 +21,11 @@ def get_user(
             )
 
     return user_found
+
+
+@router.post("/", response_model=UserRead, status_code=status.HTTP_201_CREATED)
+def create_user(
+    user: UserCreate,
+    db: DbSession
+):
+    return crud_user.create_user(user, db)
