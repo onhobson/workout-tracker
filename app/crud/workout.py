@@ -7,7 +7,10 @@ from app.db.models import WorkoutSession
 from app.schemas.workout import WorkoutCreate, WorkoutUpdate
 
 def get_workout(workout_id: int, user_id: int, db: Session) -> WorkoutSession | None:
-    stmt = select(WorkoutSession).where(WorkoutSession.id == workout_id, WorkoutSession.user_id == user_id)
+    stmt = select(WorkoutSession).where(
+        WorkoutSession.id == workout_id, 
+        WorkoutSession.user_id == user_id
+    )
     return db.scalar(stmt)
 
 
@@ -29,8 +32,17 @@ def create_workout(workout: WorkoutCreate, user_id: int, db: Session) -> Workout
     return new_workout
 
 
-def update_workout(workout_id: int, workout_update: WorkoutUpdate, user_id: int, db: Session) -> WorkoutSession | None:
-    stmt = select(WorkoutSession).where(WorkoutSession.id == workout_id, WorkoutSession.user_id == user_id)
+def update_workout(
+    workout_id: int, 
+    workout_update: WorkoutUpdate, 
+    user_id: int, 
+    db: Session
+) -> WorkoutSession | None:
+    stmt = select(WorkoutSession).where(
+        WorkoutSession.id == workout_id, 
+        WorkoutSession.user_id == user_id
+    )
+    
     workout = db.scalar(stmt)
 
     if not workout:
@@ -48,7 +60,11 @@ def update_workout(workout_id: int, workout_update: WorkoutUpdate, user_id: int,
     
 
 def delete_workout(workout_id: int, user_id: int, db: Session) -> bool:
-    stmt = select(WorkoutSession).where(WorkoutSession.id == workout_id, WorkoutSession.user_id == user_id)
+    stmt = select(WorkoutSession).where(
+        WorkoutSession.id == workout_id, 
+        WorkoutSession.user_id == user_id
+    )
+
     workout = db.scalar(stmt)
 
     if not workout:
