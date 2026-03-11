@@ -1,11 +1,11 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 from app.schemas.workout import WorkoutRead
 
 
 class UserBase(BaseModel):
     name: str
-    email: str
+    email: EmailStr
 
 
 class UserCreate(UserBase):
@@ -25,5 +25,5 @@ class UserReadSecret(UserBase):
 
 class UserUpdate(BaseModel):
     name: str | None
-    email: str | None
+    email: EmailStr | None
     password: str | None
