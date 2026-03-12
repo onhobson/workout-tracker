@@ -8,7 +8,7 @@ def seed():
     user = User( # pw = 12345
         username="sampleuser", 
         email="email@example.com", 
-        password="$argon2id$v=19$m=65536,t=3,p=4$4UBJ9OsZrPs4HYb8ADuhVA$2zLNSop23Cc1rWY9kbcOnnhDOaSQ1yp7SIbWxUneJ/U",
+        hashed_password="$argon2id$v=19$m=65536,t=3,p=4$4UBJ9OsZrPs4HYb8ADuhVA$2zLNSop23Cc1rWY9kbcOnnhDOaSQ1yp7SIbWxUneJ/U",
     )
 
     db.add(user)

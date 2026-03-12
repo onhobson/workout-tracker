@@ -16,7 +16,7 @@ def authenticate_user(
     if not user:
         verify_password_dummy(password)
         return None
-    if not verify_password(password, user.password):
+    if not verify_password(password, user.hashed_password):
         return None
     
     return user

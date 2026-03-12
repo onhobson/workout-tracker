@@ -1,5 +1,3 @@
-from typing import Annotated
-
 from pydantic import BaseModel, EmailStr, field_validator
 
 from app.schemas.workout import WorkoutRead

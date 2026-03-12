@@ -17,12 +17,17 @@ def get_user_by_username(db: Session, username: str) -> User | None:
 
 
 def create_user(user: UserCreate, db: Session) -> User | None:
-    user.username = user.username.lower()
-    user.email = user.email.lower()
-    user.password = hash_password(user.password)
+    user_data = user.model_dump()
+
+    for field in ["username", "email"]:
+        user_data[field] = user_data[field].lower()
+    
+    user_data["hashed_password"] = hash_password(
+        user_data.pop("password")
+    )
 
     new_user = User(
-        **user.model_dump()
+        **user_data
     )
 
     db.add(new_user)
@@ -40,7 +45,9 @@ def update_user(user_data: UserUpdate, user: User, db: Session) -> User | None:
             update_data[field] = update_data[field].lower()
     
     if "password" in update_data:
-        update_data["password"] = hash_password(update_data["password"])
+        update_data["hashed_password"] = hash_password(
+            update_data.pop("password")
+        )
     
     for column, value in update_data.items():
         setattr(user, column, value)
