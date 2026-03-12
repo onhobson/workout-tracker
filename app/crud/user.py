@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from app.auth.hashing import hash_password
 from app.db.models import User
 from app.schemas.user import UserCreate, UserUpdate
+from app.utils.normalization import normalize_user_info
 
 
 def get_user(user_id: int, db: Session) -> User | None:
@@ -28,8 +29,7 @@ def get_user_by_username(db: Session, username: str) -> User | None:
 def create_user(user: UserCreate, db: Session) -> User | None:
     user_data = user.model_dump()
 
-    for field in ["username", "email"]:
-        user_data[field] = user_data[field].lower()
+    user_data = normalize_user_info(user_data)
     
     user_data["hashed_password"] = hash_password(
         user_data.pop("password")
@@ -49,9 +49,7 @@ def create_user(user: UserCreate, db: Session) -> User | None:
 def update_user(user_data: UserUpdate, user: User, db: Session) -> User | None:
     update_data = user_data.model_dump(exclude_unset=True)
 
-    for field in ["username", "email"]:
-        if field in update_data and update_data[field] is not None:
-            update_data[field] = update_data[field].lower()
+    update_data = normalize_user_info(update_data)
     
     if "password" in update_data:
         update_data["hashed_password"] = hash_password(
