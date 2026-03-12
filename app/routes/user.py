@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, status
 
 from app.crud import user as crud_user
 from app.dependencies import *
-from app.schemas.user import UserCreate, UserRead
+from app.schemas.user import UserCreate, UserRead, UserUpdate
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -29,3 +29,34 @@ def create_user(
     db: DbSession
 ):
     return crud_user.create_user(user, db)
+
+
+@router.put("/", response_model=UserRead)
+def update_user(
+    user_data: UserUpdate,
+    user: CurrentUser,
+    db: DbSession
+):
+    user_update = crud_user.update_user(user_data, user.id, db)
+
+    if not user_update:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User with id: {user.id} not found",
+        )
+    
+    return user_update
+
+
+@router.delete("/", status_code=status.HTTP_204_NO_CONTENT)
+def delete_user(
+    user: CurrentUser,
+    db: DbSession
+):
+    success = crud_user.delete_user(user.id, db)
+
+    if not success:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User with id: {user.id} not found",
+        )
