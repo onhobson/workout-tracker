@@ -39,5 +39,6 @@ Tools
  - - User selects proper exercise
  - - Exercise contains information like: equipment, muscle groups
  - Workout history
+ - Email based password recovery
  - Frontend GUI
  - Analytics
