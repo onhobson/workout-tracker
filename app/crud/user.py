@@ -32,23 +32,15 @@ def create_user(user: UserCreate, db: Session) -> User | None:
     return new_user
 
 
-def update_user(user_data: UserUpdate, user_id: int, db: Session) -> User | None:
-    stmt = select(User).where(User.id == user_id)
-    user = db.scalar(stmt)
-
-    if not user:
-        return None
-    
-    if user_data.password is not None:
-        user_data.password = hash_password(user_data.password)
-
-    if user_data.username is not None:
-        user_data.username = user_data.username.lower()
-
-    if user_data.email is not None:
-        user_data.email = user_data.email.lower()
-
+def update_user(user_data: UserUpdate, user: User, db: Session) -> User | None:
     update_data = user_data.model_dump(exclude_unset=True)
+
+    for field in ["username", "email"]:
+        if field in update_data and update_data[field] is not None:
+            update_data[field] = update_data[field].lower()
+    
+    if "password" in update_data:
+        update_data["password"] = hash_password(update_data["password"])
     
     for column, value in update_data.items():
         setattr(user, column, value)

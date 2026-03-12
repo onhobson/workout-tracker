@@ -37,7 +37,7 @@ def update_user(
     user: CurrentUser,
     db: DbSession
 ):
-    user_update = crud_user.update_user(user_data, user.id, db)
+    user_update = crud_user.update_user(user_data, user, db)
 
     if not user_update:
         raise HTTPException(
