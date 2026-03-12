@@ -100,7 +100,21 @@ class MuscleGroup(Base):
 
     muscle: Mapped[str] = mapped_column(nullable=False)
 
-    
+
+class ExerciseMuscleGroup(Base):
+    __tablename__ = "exercise_muscle_groups"
+
+    exercise_id: Mapped[int] = mapped_column(
+        ForeignKey("exercises.id"),
+        primary_key=True,
+    )
+    muscle_group_id: Mapped[int] = mapped_column(
+        ForeignKey("muscle_groups.id"),
+        primary_key=True,
+    )
+
+    role: Mapped[str] = mapped_column(nullable=False)
+
 
 if __name__ == "__main__":
     engine = create_engine(
