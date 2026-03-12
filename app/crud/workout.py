@@ -7,6 +7,9 @@ from app.db.models import WorkoutSession
 from app.schemas.workout import WorkoutCreate, WorkoutUpdate
 
 def get_workout(workout_id: int, user_id: int, db: Session) -> WorkoutSession | None:
+    """
+    Return one workout by id belonging to a specific user.
+    """
     stmt = select(WorkoutSession).where(
         WorkoutSession.id == workout_id, 
         WorkoutSession.user_id == user_id
@@ -15,6 +18,9 @@ def get_workout(workout_id: int, user_id: int, db: Session) -> WorkoutSession | 
 
 
 def get_user_workouts(user_id: int, db: Session) -> Sequence[WorkoutSession]:
+    """
+    Return all workouts belonging to a specific user.
+    """
     stmt = select(WorkoutSession).where(WorkoutSession.user_id == user_id)
     return db.scalars(stmt).all()
 

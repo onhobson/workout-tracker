@@ -12,6 +12,9 @@ def get_user(
     user: CurrentUser, 
     db: DbSession
 ):
+    """
+    Return user data for currently authenticated user.
+    """
     user_found = crud_user.get_user(user.id, db)
 
     if not user_found:
@@ -28,6 +31,9 @@ def create_user(
     user: UserCreate,
     db: DbSession
 ):
+    """
+    Create a new user.
+    """
     return crud_user.create_user(user, db)
 
 
@@ -37,6 +43,9 @@ def update_user(
     user: CurrentUser,
     db: DbSession
 ):
+    """
+    Update fields of an authenticated user.
+    """
     user_update = crud_user.update_user(user_data, user, db)
 
     if not user_update:
@@ -53,6 +62,9 @@ def delete_user(
     user: CurrentUser,
     db: DbSession
 ):
+    """
+    Delete the currently authenticated user.
+    """
     success = crud_user.delete_user(user.id, db)
 
     if not success:

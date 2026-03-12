@@ -13,6 +13,9 @@ def get_set(
     user: CurrentUser,
     db: DbSession
 ):
+    """
+    Return set by ID belonging to authenticated user.
+    """
     workout_set = crud_set.get_set(set_id, user.id, db)
     
     if not workout_set:
@@ -29,6 +32,9 @@ def create_set(
     set_data: SetCreate,
     db: DbSession
 ):
+    """
+    Create a new set belonging to authenticated user.
+    """
     return  crud_set.create_set(set_data, db)
 
 
@@ -39,6 +45,9 @@ def update_set(
     user: CurrentUser,
     db: DbSession
 ):
+    """
+    Update a set by ID belonging to authenticated user.
+    """
     workout_set = crud_set.update_set(set_id, set_data, user.id, db)
 
     if not workout_set:
@@ -56,6 +65,9 @@ def delete_set(
     user: CurrentUser,
     db: DbSession
 ):
+    """
+    Delete a set by ID belonging to authenticated user.
+    """
     workout_set = crud_set.delete_set(set_id, user.id, db)
 
     if not workout_set:

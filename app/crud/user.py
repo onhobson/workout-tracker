@@ -7,11 +7,17 @@ from app.schemas.user import UserCreate, UserUpdate
 
 
 def get_user(user_id: int, db: Session) -> User | None:
+    """
+    Return user by ID.
+    """
     stmt = select(User).where(User.id == user_id)
     return db.scalar(stmt)
 
 
 def get_user_by_username(db: Session, username: str) -> User | None:
+    """
+    Return user by username.
+    """
     stmt = select(User).where(User.username == username)
     return db.scalar(stmt)
 

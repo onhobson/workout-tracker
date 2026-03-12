@@ -8,6 +8,11 @@ def create_access_token(
     data: dict,
     expires_delta: timedelta | None = None,
 ) -> str:
+    """
+    Generate JWT access token for a user.
+
+    Token contains user id as 'sub' claim and expires after ACCESS_TOKEN_EXPIRE_MINUTES.
+    """
     to_encode = data.copy()
 
     if expires_delta:

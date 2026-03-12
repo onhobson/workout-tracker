@@ -15,6 +15,9 @@ def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: DbSession,
 ):
+    """
+    Authenticates user login data and returns a created JWT
+    """
     user = authenticate_user(db, form_data.username, form_data.password)
 
     if not user:

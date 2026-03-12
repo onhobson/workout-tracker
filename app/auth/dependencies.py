@@ -15,6 +15,11 @@ async def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)],
     db: DbSession,
 ):
+    """
+    Decode JWT token and return authenticated user.
+
+    Raises HTTPException(401) if token is invalid or user does not exist.
+    """
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Not authenticated",

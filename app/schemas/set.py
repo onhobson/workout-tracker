@@ -6,7 +6,7 @@ class SetBase(BaseModel):
     set_number: int
     reps: int
     weight: int = 0
-    rest: int | None
+    rest: int | None = None
 
 
 class SetCreate(SetBase):
