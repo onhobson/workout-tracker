@@ -30,12 +30,21 @@ def get_set(
 @router.post("/", response_model=SetRead, status_code=status.HTTP_201_CREATED)
 def create_set(
     set_data: SetCreate,
+    user: CurrentUser,
     db: DbSession
 ):
     """
     Create a new set belonging to authenticated user.
     """
-    return  crud_set.create_set(set_data, db)
+    workout_set = crud_set.create_set(set_data, user.id, db)
+
+    if not workout_set:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail=f"Workout with id: {set_data.workout_id} not found",
+        )
+
+    return workout_set
 
 
 @router.put("/{set_id}", response_model=SetRead)

@@ -18,7 +18,22 @@ def get_set(set_id: int, user_id: int, db: Session) -> Set | None:
     return db.scalar(stmt)
 
 
-def create_set(set_data: SetCreate, db: Session) -> Set | None:
+def create_set(set_data: SetCreate, user_id: int, db: Session) -> Set | None:
+    """
+    Create a new set related to a supplied workout ID.
+
+    Return none if supplied workout ID does not exist, or workout
+    does not belong to authenticated user.
+    """
+    stmt = select(WorkoutSession).where(WorkoutSession.id == set_data.workout_id)
+    workout = db.scalar(stmt)
+
+    if not workout:
+        return None
+    
+    if workout.user_id != user_id:
+        return None
+
     workout_set = Set(
         **set_data.model_dump(),
     )
