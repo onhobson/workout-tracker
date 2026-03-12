@@ -91,6 +91,15 @@ class Equipment(Base):
 
     name: Mapped[str] = mapped_column(nullable=False)
     input_mode: Mapped[str] = mapped_column(nullable=False)
+
+
+class MuscleGroup(Base):
+    __tablename__ = "muscle_groups"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    muscle: Mapped[str] = mapped_column(nullable=False)
+
     
 
 if __name__ == "__main__":
