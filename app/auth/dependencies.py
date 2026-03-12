@@ -1,3 +1,6 @@
+"""
+Provides dependencies to API routes for user authentication
+"""
 from typing import Annotated
 
 from fastapi import Depends, HTTPException, status

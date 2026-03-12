@@ -1,3 +1,6 @@
+"""
+Services for handling authentication
+"""
 from app.dependencies import *
 from app.crud import user as crud_user
 from app.auth.hashing import verify_password, verify_password_dummy

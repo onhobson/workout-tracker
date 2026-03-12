@@ -1,5 +1,6 @@
-from typing import Sequence
-
+"""
+Database operations related to sets.
+"""
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 

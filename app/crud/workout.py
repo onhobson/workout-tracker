@@ -1,3 +1,6 @@
+"""
+Database operations related to workouts.
+"""
 from typing import Sequence
 
 from sqlalchemy import select

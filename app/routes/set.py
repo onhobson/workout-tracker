@@ -1,3 +1,9 @@
+"""
+Set route endpoints
+
+Provides API routes for creating, reading, updating,
+and deleting sets belonging to an authenticated user.
+"""
 from fastapi import APIRouter, HTTPException, status
 
 from app.crud import set as crud_set

@@ -1,3 +1,6 @@
+"""
+JWT creation and decoding for user authentication.
+"""
 from datetime import datetime, timedelta, timezone
 
 import jwt

@@ -1,3 +1,9 @@
+"""
+Workout route endpoints.
+
+Provides API routes for creating, reading, updating,
+and deleting workouts belonging to an authenticated user.
+"""
 from fastapi import APIRouter, HTTPException, status
 
 from app.crud import workout as crud_workout

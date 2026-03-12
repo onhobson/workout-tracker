@@ -1,3 +1,6 @@
+"""
+Database operations related to users.
+"""
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 

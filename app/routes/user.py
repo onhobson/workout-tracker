@@ -1,3 +1,9 @@
+"""
+User route enpoints.
+
+Provides API routes for reading, updating, 
+and deleting an authenticated user, or for creating a new user.
+"""
 from fastapi import APIRouter, HTTPException, status
 
 from app.crud import user as crud_user
