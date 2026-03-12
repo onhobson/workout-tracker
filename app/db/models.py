@@ -63,7 +63,35 @@ class Set(Base):
     rest: Mapped[int|None] = mapped_column(nullable=True)
 
     workout: Mapped["WorkoutSession"] = relationship(back_populates="sets")
+    
 
+class Exercise(Base):
+    __tablename__ = "exercises"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    equipment_id: Mapped[int] = mapped_column(
+        ForeignKey("equipment.id"),
+        nullable=False,
+    )
+    created_by_user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id"),
+        nullable=True,
+    )
+
+    name: Mapped[str] = mapped_column(nullable=False)
+
+    equipment: Mapped["Equipment"] = relationship()
+
+
+class Equipment(Base):
+    __tablename__ = "equipment"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    name: Mapped[str] = mapped_column(nullable=False)
+    input_mode: Mapped[str] = mapped_column(nullable=False)
+    
 
 if __name__ == "__main__":
     engine = create_engine(
