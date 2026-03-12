@@ -9,6 +9,8 @@ def authenticate_user(
         username: str,
         password: str,
 ) -> User | None:
+    username = username.lower()
+
     user = crud_user.get_user_by_username(db, username)
 
     if not user:
