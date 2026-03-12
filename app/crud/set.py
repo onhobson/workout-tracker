@@ -1,7 +1,7 @@
 """
 Database operations related to sets.
 """
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.db.models import Set, WorkoutSession
@@ -34,8 +34,20 @@ def create_set(set_data: SetCreate, user_id: int, db: Session) -> Set | None:
     
     if workout.user_id != user_id:
         return None
+    
+    stmt = (
+        select(func.max(Set.set_number))
+        .where(
+            Set.workout_id == set_data.workout_id,
+            Set.exercise == set_data.exercise,
+        )
+    )
+    current_max = db.scalar(stmt)
+
+    next_set_number = 1 if current_max is None else current_max + 1
 
     workout_set = Set(
+        set_number = next_set_number,
         **set_data.model_dump(),
     )
 

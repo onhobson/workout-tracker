@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List
 
-from sqlalchemy import DateTime, ForeignKey, create_engine, func
+from sqlalchemy import DateTime, ForeignKey, UniqueConstraint, create_engine, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 class Base(DeclarativeBase):
@@ -45,6 +45,9 @@ class WorkoutSession(Base):
 
 class Set(Base):
     __tablename__ = "sets"
+    __table_args__ = (
+        UniqueConstraint("workout_id", "exercise", "set_number", name="uq_exercise_set_per_workout"),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
@@ -54,8 +57,7 @@ class Set(Base):
     )
 
     exercise: Mapped[str] = mapped_column(nullable=False)
-    # TODO: Autoincrement set_number based on session_id?
-    set_number: Mapped[int] = mapped_column(nullable=True)
+    set_number: Mapped[int] = mapped_column(nullable=False)
     reps: Mapped[int] = mapped_column(nullable=False)
     weight: Mapped[int] = mapped_column(server_default="0", nullable=False)
     rest: Mapped[int|None] = mapped_column(nullable=True)
