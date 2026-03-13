@@ -66,6 +66,7 @@ class Set(Base):
     rest: Mapped[int|None] = mapped_column(nullable=True)
 
     workout: Mapped["WorkoutSession"] = relationship(back_populates="sets")
+    exercise: Mapped["Exercise"] = relationship()
     
 
 class Exercise(Base):
@@ -102,7 +103,7 @@ class MuscleGroup(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    muscle: Mapped[str] = mapped_column(nullable=False)
+    name: Mapped[str] = mapped_column(nullable=False)
 
     exercises: Mapped[List["ExerciseMuscleGroup"]] = relationship(back_populates="muscle")
 
