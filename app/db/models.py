@@ -46,7 +46,7 @@ class WorkoutSession(Base):
 class Set(Base):
     __tablename__ = "sets"
     __table_args__ = (
-        UniqueConstraint("workout_id", "exercise", "set_number", name="uq_exercise_set_per_workout"),
+        UniqueConstraint("workout_id", "exercise_id", "set_number", name="uq_exercise_set_per_workout"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -55,14 +55,18 @@ class Set(Base):
         ForeignKey("workout_sessions.id"),
         nullable=False
     )
+    exercise_id: Mapped[int] = mapped_column(
+        ForeignKey("exercises.id"),
+        nullable=False,
+    )
 
-    exercise: Mapped[str] = mapped_column(nullable=False)
     set_number: Mapped[int] = mapped_column(nullable=False)
     reps: Mapped[int] = mapped_column(nullable=False)
     weight: Mapped[int] = mapped_column(server_default="0", nullable=False)
     rest: Mapped[int|None] = mapped_column(nullable=True)
 
     workout: Mapped["WorkoutSession"] = relationship(back_populates="sets")
+    exercise: Mapped["Exercise"] = relationship()
     
 
 class Exercise(Base):
@@ -99,7 +103,7 @@ class MuscleGroup(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    muscle: Mapped[str] = mapped_column(nullable=False)
+    name: Mapped[str] = mapped_column(nullable=False)
 
     exercises: Mapped[List["ExerciseMuscleGroup"]] = relationship(back_populates="muscle")
 
