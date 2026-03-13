@@ -5,3 +5,11 @@ class DuplicateUserError(Exception):
         self.field = field
         message = f"{field} already exists"
         super().__init__(message)
+
+class EmptyStringError(Exception):
+    """Raised when a supplied required field contains an empty string."""
+
+    def __init__(self, field: str):
+        self.field = field
+        message = f"{field} can not be empty"
+        super().__init__(message)

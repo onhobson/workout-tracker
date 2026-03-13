@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 
 from app.auth.hashing import hash_password
-from app.core.exceptions import DuplicateUserError
+from app.core.exceptions import DuplicateUserError, EmptyStringError
 from app.db.models import User
 from app.schemas.user import UserCreate, UserUpdate
 from app.utils.normalization import normalize_user_info
@@ -33,7 +33,9 @@ def create_user(user: UserCreate, db: Session) -> User | None:
 
     user_data = normalize_user_info(user_data)
 
-    stmt = select(User)
+    for field, value in user_data.items():
+        if not value:
+            raise EmptyStringError(field)
     
     user_data["hashed_password"] = hash_password(
         user_data.pop("password")

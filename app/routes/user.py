@@ -9,7 +9,7 @@ from fastapi import APIRouter, HTTPException, status
 from app.crud import user as crud_user
 from app.dependencies import *
 from app.schemas.user import UserCreate, UserRead, UserUpdate
-from app.core.exceptions import DuplicateUserError
+from app.core.exceptions import DuplicateUserError, EmptyStringError
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -43,11 +43,15 @@ def create_user(
     """
     try: 
         return crud_user.create_user(user, db)
-    
     except DuplicateUserError as e:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail=f"Given {e.field} is taken",
+        )
+    except EmptyStringError as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail=f"{e.field.capitalize()} can not be empty"
         )
 
 
