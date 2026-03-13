@@ -3,8 +3,10 @@ Database operations related to users.
 """
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 
 from app.auth.hashing import hash_password
+from app.core.exceptions import DuplicateUserError
 from app.db.models import User
 from app.schemas.user import UserCreate, UserUpdate
 from app.utils.normalization import normalize_user_info
@@ -30,6 +32,8 @@ def create_user(user: UserCreate, db: Session) -> User | None:
     user_data = user.model_dump()
 
     user_data = normalize_user_info(user_data)
+
+    stmt = select(User)
     
     user_data["hashed_password"] = hash_password(
         user_data.pop("password")
@@ -40,7 +44,17 @@ def create_user(user: UserCreate, db: Session) -> User | None:
     )
 
     db.add(new_user)
-    db.commit()
+
+    try:
+        db.commit()
+    except IntegrityError as e:
+        db.rollback()
+
+        if "username" in str(e.orig):
+            raise DuplicateUserError("username")
+        if "email" in str(e.orig):
+            raise DuplicateUserError("email")
+
     db.refresh(new_user)
 
     return new_user
