@@ -82,6 +82,7 @@ class Exercise(Base):
     name: Mapped[str] = mapped_column(nullable=False)
 
     equipment: Mapped["Equipment"] = relationship()
+    muscles: Mapped[List["ExerciseMuscleGroup"]] = relationship(back_populates="exercise")
 
 
 class Equipment(Base):
@@ -100,6 +101,8 @@ class MuscleGroup(Base):
 
     muscle: Mapped[str] = mapped_column(nullable=False)
 
+    exercises: Mapped[List["ExerciseMuscleGroup"]] = relationship(back_populates="muscle")
+
 
 class ExerciseMuscleGroup(Base):
     __tablename__ = "exercise_muscle_groups"
@@ -114,6 +117,9 @@ class ExerciseMuscleGroup(Base):
     )
 
     role: Mapped[str] = mapped_column(nullable=False)
+
+    exercise: Mapped["Exercise"] = relationship(back_populates="muscles")
+    muscle: Mapped["MuscleGroup"] = relationship(back_populates="exercises")
 
 
 if __name__ == "__main__":
