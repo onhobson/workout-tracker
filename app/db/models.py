@@ -46,7 +46,7 @@ class WorkoutSession(Base):
 class Set(Base):
     __tablename__ = "sets"
     __table_args__ = (
-        UniqueConstraint("workout_id", "exercise", "set_number", name="uq_exercise_set_per_workout"),
+        UniqueConstraint("workout_id", "exercise_id", "set_number", name="uq_exercise_set_per_workout"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -55,14 +55,75 @@ class Set(Base):
         ForeignKey("workout_sessions.id"),
         nullable=False
     )
+    exercise_id: Mapped[int] = mapped_column(
+        ForeignKey("exercises.id"),
+        nullable=False,
+    )
 
-    exercise: Mapped[str] = mapped_column(nullable=False)
     set_number: Mapped[int] = mapped_column(nullable=False)
     reps: Mapped[int] = mapped_column(nullable=False)
     weight: Mapped[int] = mapped_column(server_default="0", nullable=False)
     rest: Mapped[int|None] = mapped_column(nullable=True)
 
     workout: Mapped["WorkoutSession"] = relationship(back_populates="sets")
+    exercise: Mapped["Exercise"] = relationship()
+    
+
+class Exercise(Base):
+    __tablename__ = "exercises"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    equipment_id: Mapped[int] = mapped_column(
+        ForeignKey("equipment.id"),
+        nullable=False,
+    )
+    created_by_user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id"),
+        nullable=True,
+    )
+
+    name: Mapped[str] = mapped_column(nullable=False)
+
+    equipment: Mapped["Equipment"] = relationship()
+    muscles: Mapped[List["ExerciseMuscleGroup"]] = relationship(back_populates="exercise")
+
+
+class Equipment(Base):
+    __tablename__ = "equipment"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    name: Mapped[str] = mapped_column(nullable=False)
+    input_mode: Mapped[str] = mapped_column(nullable=False)
+
+
+class MuscleGroup(Base):
+    __tablename__ = "muscle_groups"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    name: Mapped[str] = mapped_column(nullable=False)
+
+    exercises: Mapped[List["ExerciseMuscleGroup"]] = relationship(back_populates="muscle")
+
+
+class ExerciseMuscleGroup(Base):
+    __tablename__ = "exercise_muscle_groups"
+
+    exercise_id: Mapped[int] = mapped_column(
+        ForeignKey("exercises.id"),
+        primary_key=True,
+    )
+    muscle_group_id: Mapped[int] = mapped_column(
+        ForeignKey("muscle_groups.id"),
+        primary_key=True,
+    )
+
+    role: Mapped[str] = mapped_column(nullable=False)
+
+    exercise: Mapped["Exercise"] = relationship(back_populates="muscles")
+    muscle: Mapped["MuscleGroup"] = relationship(back_populates="exercises")
 
 
 if __name__ == "__main__":

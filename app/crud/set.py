@@ -39,7 +39,7 @@ def create_set(set_data: SetCreate, user_id: int, db: Session) -> Set | None:
         select(func.max(Set.set_number))
         .where(
             Set.workout_id == set_data.workout_id,
-            Set.exercise == set_data.exercise,
+            Set.exercise_id == set_data.exercise_id,
         )
     )
     current_max = db.scalar(stmt)
