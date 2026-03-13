@@ -25,7 +25,3 @@ class ExerciseUpdate(BaseModel):
     name: str | None = None
     equipment_id: int | None = None
     muscle_group_ids: list[int] | None = None
-    
-
-class ExerciseSummary(ExerciseBase):
-    id: int
