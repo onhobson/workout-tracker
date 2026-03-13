@@ -4,7 +4,7 @@ from app.schemas.common import ExerciseSummary
 
 class MuscleGroupRead(BaseModel):
     id: int
-    muscle: str
+    name: str
 
     model_config = ConfigDict(from_attributes=True)
 
