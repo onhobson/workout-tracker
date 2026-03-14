@@ -12,7 +12,7 @@ def create_user(client: TestClient, username="username", email="user@example.com
             "password": password
         }
     )
-    
+
 
 class TestCreateUser:
     def test_create_user(self, client: TestClient):
@@ -100,6 +100,110 @@ class TestUserLogin:
                 "username": "username",
                 "password": "badpassword"
             }
+        )
+
+        assert response.status_code == 401
+
+
+class TestReadUser:
+    def test_get_user(self, auth_client: TestClient):
+        response = auth_client.get(
+            "/users"
+        )
+
+        assert response.status_code == 200
+
+        response_data = response.json()
+
+        assert response_data["id"] == 1
+
+    
+    def test_get_user_unauth(self, client: TestClient):
+        response = client.get(
+            "/users"
+        )
+
+        assert response.status_code == 401
+
+
+class TestUpdateUser:
+    def test_update_user(self, auth_client: TestClient):
+        response = auth_client.put(
+            "/users",
+            json={
+                "username": "newname",
+                "email": "new@example.com"
+            }
+        )
+
+        assert response.status_code == 200
+
+        response_data = response.json()
+
+        assert response_data["username"] == "newname"
+        assert response_data["email"] == "new@example.com"
+
+    
+    @pytest.mark.parametrize(
+        "username,email",
+        [
+            ("", "test@example.com"),
+            ("  ", "test@example.com"),
+            ("username", ""),
+            ("username", "   ")
+        ]
+    )
+    def test_update_user_invalid(self, auth_client: TestClient, username, email):
+        response = auth_client.put(
+            "/users",
+            json={
+                "username": username,
+                "email": email
+            }
+        )
+
+        assert response.status_code == 422
+
+    
+    def test_update_user_unauth(self, client: TestClient):
+        response = client.get(
+            "/users"
+        )
+
+        assert response.status_code == 401
+
+    
+    def test_update_user_password(self, auth_client: TestClient):
+        auth_client.put(
+            "/users",
+            json={
+                "password": "newpassword098"
+            }
+        )
+
+        response = auth_client.post(
+            "/auth/login",
+            data={
+                "username": "testuser",
+                "password": "newpassword098"
+            }
+        )
+
+        assert response.status_code == 200
+
+
+class TestDeleteUser:
+    def test_delete_user(self, auth_client: TestClient):
+        response = auth_client.delete(
+            "/users"
+        )
+
+        assert response.status_code == 204
+
+    
+    def test_delete_user_unauth(self, client: TestClient):
+        response = client.delete(
+            "/users"
         )
 
         assert response.status_code == 401
