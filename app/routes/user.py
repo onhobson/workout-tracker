@@ -64,7 +64,13 @@ def update_user(
     """
     Update fields of an authenticated user.
     """
-    user_update = crud_user.update_user(user_data, user, db)
+    try:
+        user_update = crud_user.update_user(user_data, user, db)
+    except EmptyStringError as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail=f"{e.field.capitalize()} can not be empty"
+        )
 
     if not user_update:
         raise HTTPException(

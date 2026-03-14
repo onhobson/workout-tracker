@@ -34,7 +34,7 @@ def create_user(user: UserCreate, db: Session) -> User | None:
     user_data = normalize_user_info(user_data)
 
     for field, value in user_data.items():
-        if not value:
+        if not value.strip():
             raise EmptyStringError(field)
     
     user_data["hashed_password"] = hash_password(
@@ -48,7 +48,7 @@ def create_user(user: UserCreate, db: Session) -> User | None:
     db.add(new_user)
 
     try:
-        db.commit()
+        db.flush()
     except IntegrityError as e:
         db.rollback()
 
@@ -57,6 +57,7 @@ def create_user(user: UserCreate, db: Session) -> User | None:
         if "email" in str(e.orig):
             raise DuplicateUserError("email")
 
+    db.commit()
     db.refresh(new_user)
 
     return new_user
@@ -66,6 +67,10 @@ def update_user(user_data: UserUpdate, user: User, db: Session) -> User | None:
     update_data = user_data.model_dump(exclude_unset=True)
 
     update_data = normalize_user_info(update_data)
+
+    for field, value in update_data.items():
+        if not value.strip():
+            raise EmptyStringError(field)
     
     if "password" in update_data:
         update_data["hashed_password"] = hash_password(
