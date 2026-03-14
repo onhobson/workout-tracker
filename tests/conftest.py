@@ -41,7 +41,21 @@ def db_session():
 
 
 @pytest.fixture()
-def client(db_session, test_user):
+def client(db_session):
+
+    def override_get_db():
+        yield db_session
+
+    app.dependency_overrides[get_session] = override_get_db
+
+    with TestClient(app) as client:
+        yield client
+
+    app.dependency_overrides.clear()
+
+
+@pytest.fixture()
+def auth_client(db_session, test_user):
 
     def override_get_db():
         yield db_session
