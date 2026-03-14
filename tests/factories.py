@@ -37,6 +37,7 @@ def set_factory(db_session, workout_factory, exercise_factory):
         defaults = {
             "workout_id": workout.id,
             "exercise_id": exercise.id,
+            "set_number": 1,
             "reps": 8,
             "weight": 135,
             "rest": 120
@@ -86,7 +87,7 @@ def exercise_factory(db_session, equipment_factory):
         equipment = equipment_factory()
 
         defaults = {
-            "equipment_id": 1,
+            "equipment_id": equipment.id,
             "name": "Bench Press"
         }
 
