@@ -56,3 +56,50 @@ class TestCreateUser:
 
         assert response.status_code == 422
 
+
+class TestUserLogin:
+    def test_login(self, client: TestClient):
+        create_user(client, username="username", password="12345")
+
+        response = client.post(
+            "/auth/login",
+            data={
+                "username": "username",
+                "password": "12345"
+            }
+        )
+
+        assert response.status_code == 200
+
+        response_data = response.json()
+
+        assert response_data["access_token"] is not None
+        assert response_data["token_type"] == "bearer"
+
+    
+    def test_login_invalid_username(self, client: TestClient):
+        create_user(client, username="username", password="12345")
+
+        response = client.post(
+            "/auth/login",
+            data={
+                "username": "badusername",
+                "password": "12345"
+            }
+        )
+
+        assert response.status_code == 401
+
+    
+    def test_login_invalid_password(self, client: TestClient):
+        create_user(client, username="username", password="12345")
+
+        response = client.post(
+            "/auth/login",
+            data={
+                "username": "username",
+                "password": "badpassword"
+            }
+        )
+
+        assert response.status_code == 401
