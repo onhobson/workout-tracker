@@ -1,10 +1,8 @@
 from datetime import datetime
-from typing import Annotated
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict
 
 from app.schemas.set import SetRead
-from app.utils.naming import generate_workout_name
 
 class WorkoutBase(BaseModel):
     name: str | None = None
@@ -22,8 +20,7 @@ class WorkoutRead(WorkoutBase):
 
     sets: list[SetRead] = []
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class WorkoutUpdate(WorkoutBase):
