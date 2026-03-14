@@ -132,6 +132,14 @@ class TestReadWorkout():
         assert response_data[1]["user_id"] == 1
 
     
+    def test_get_workout_bad_id(self, auth_client: TestClient):
+        response = auth_client.get(
+            "/workouts/202"
+        )
+
+        assert response.status_code == 404
+
+    
 class TestUpdateWorkout():
     def test_update_workout(self, auth_client: TestClient, workout_factory):
         workout = workout_factory()
@@ -184,6 +192,17 @@ class TestUpdateWorkout():
         
         assert workout.name == "Test Workout"
         assert workout.notes == "Test notes"
+        
+
+    def test_update_workout_bad_id(self, auth_client: TestClient):
+        response = auth_client.put(
+            "/workouts/202",
+            json={
+                "name": "Workout"
+            }
+        )
+
+        assert response.status_code == 404
 
 
 class TestDeleteWorkout():
@@ -212,6 +231,14 @@ class TestDeleteWorkout():
 
         response = auth_client.delete(
             f"/workout/{workout.id}"
+        )
+
+        assert response.status_code == 404
+
+        
+    def test_delete_workout_bad_id(self, auth_client: TestClient):
+        response = auth_client.delete(
+            "/workouts/202"
         )
 
         assert response.status_code == 404
