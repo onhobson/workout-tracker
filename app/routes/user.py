@@ -9,6 +9,7 @@ from fastapi import APIRouter, HTTPException, status
 from app.crud import user as crud_user
 from app.dependencies import *
 from app.schemas.user import UserCreate, UserRead, UserUpdate
+from app.core.exceptions import DuplicateUserError, EmptyStringError
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -40,7 +41,18 @@ def create_user(
     """
     Create a new user.
     """
-    return crud_user.create_user(user, db)
+    try: 
+        return crud_user.create_user(user, db)
+    except DuplicateUserError as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail=f"Given {e.field} is taken",
+        )
+    except EmptyStringError as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail=f"{e.field.capitalize()} can not be empty"
+        )
 
 
 @router.put("/", response_model=UserRead)
@@ -52,7 +64,13 @@ def update_user(
     """
     Update fields of an authenticated user.
     """
-    user_update = crud_user.update_user(user_data, user, db)
+    try:
+        user_update = crud_user.update_user(user_data, user, db)
+    except EmptyStringError as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail=f"{e.field.capitalize()} can not be empty"
+        )
 
     if not user_update:
         raise HTTPException(
