@@ -11,7 +11,10 @@ from app.db.models import Base, User
 
 engine = create_engine(
     "sqlite://",
-    connect_args={"check_same_thread": False},
+    connect_args={
+        "check_same_thread": False,
+        "autocommit": False
+    },
 )
 
 TestSession = sessionmaker(bind=engine)
@@ -67,3 +70,5 @@ def test_user(db_session):
     db_session.commit()
     db_session.refresh(user)
     return user
+
+
