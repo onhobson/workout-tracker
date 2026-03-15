@@ -1,5 +1,6 @@
 import pytest
-
+from sqlalchemy import select
+from sqlalchemy.orm import Session
 from app.db.models import Equipment, Exercise, User, WorkoutSession, Set
 
 
@@ -81,10 +82,14 @@ def equipment_factory(db_session):
 
 
 @pytest.fixture()
-def exercise_factory(db_session, equipment_factory):
+def exercise_factory(db_session: Session, equipment_factory):
     
     def create_exercise(**kwargs):
-        equipment = equipment_factory()
+        equipment = db_session.scalar(select(Equipment))
+
+        if not equipment:
+            equipment = equipment_factory()
+        
 
         defaults = {
             "equipment_id": equipment.id,
