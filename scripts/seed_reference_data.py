@@ -1,7 +1,7 @@
 from sqlalchemy import select, insert
 
 from app.db.database import Session
-from app.db.models import Equipment, MuscleGroup
+from app.db.models import Equipment, MuscleGroup, Exercise, ExerciseMuscleGroup
 
 
 EQUIPMENT = [
@@ -107,7 +107,7 @@ EXERCISES = [
 ]
 
 
-def seed_exercises():
+def seed_equipment():
     with Session() as db:
         existing = db.scalars(select(Equipment.name)).all()
         existing_set = set(existing)
@@ -131,6 +131,20 @@ def seed_muscle_groups():
             db.commit()
 
 
+def seed_exercises():
+    with Session() as db:
+        existing = db.scalars(select(Exercise.name)).all()
+        existing_set = set(existing)
+
+        new_rows = [row for row in EXERCISES if row["name"] not in existing_set]
+
+        if new_rows:
+            db.execute(insert(Exercise), new_rows)
+            db.commit()
+
+
+
 if __name__ == "__main__":
-    seed_exercises()
+    seed_equipment()
     seed_muscle_groups()
+    seed_exercises()
