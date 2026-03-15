@@ -68,6 +68,42 @@ class TestCreateSet():
         assert response_data["weight"] == 0
         assert response_data["rest"] == None
 
+    
+    def test_create_set_numbering(self, auth_client: TestClient, workout_factory, exercise_factory):
+        workout = workout_factory()
+        exercise = exercise_factory()
+
+        def create_dummy_set(ex_id):
+            return auth_client.post(
+                "/sets",
+                json={
+                    "workout_id": workout.id,
+                    "exercise_id": ex_id.id,
+                    "reps": 8,
+                    "weight": 135,
+                    "rest": 30
+                }
+            )
+        
+        set_responses = []
+
+        set_responses.append(create_dummy_set(exercise))
+        set_responses.append(create_dummy_set(exercise))
+
+        exercise_two = exercise_factory()
+        set_responses.append(create_dummy_set(exercise_two))
+        
+        set_responses.append(create_dummy_set(exercise))
+
+        for i, response in enumerate(set_responses):
+            assert response.status_code == 201
+            set_responses[i] = response.json()
+
+        assert set_responses[0]["set_number"] == 1
+        assert set_responses[1]["set_number"] == 2
+        assert set_responses[2]["set_number"] == 1
+        assert set_responses[3]["set_number"] == 3
+
 
 class TestReadSet():
     def test_read_set(self, auth_client: TestClient, set_factory):
