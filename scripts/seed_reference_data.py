@@ -107,6 +107,42 @@ EXERCISES = [
 ]
 
 
+EXERCISE_MUSCLES = {
+    "Bench Press": [("Chest", "primary"), ("Triceps", "secondary"), ("Front Delts", "secondary")],
+    "Incline Bench Press": [("Upper Chest", "primary"), ("Triceps", "secondary"), ("Front Delts", "secondary")],
+    "Dumbbell Fly": [("Chest", "primary")],
+    "Push-Up": [("Chest", "primary"), ("Triceps", "secondary"), ("Front Delts", "secondary")],
+    "Pull-Up": [("Lats", "primary"), ("Biceps", "secondary"), ("Upper Back", "secondary")],
+    "Lat Pulldown": [("Lats", "primary"), ("Biceps", "secondary")],
+    "Barbell Row": [("Upper Back", "primary"), ("Lats", "secondary"), ("Biceps", "secondary")],
+    "Dumbbell Row": [("Upper Back", "primary"), ("Lats", "secondary"), ("Biceps", "secondary")],
+    "Overhead Press": [("Shoulders", "primary"), ("Triceps", "secondary")],
+    "Dumbbell Lateral Raise": [("Lateral Delts", "primary")],
+    "Cable Face Pull": [("Rear Delts", "primary"), ("Traps", "secondary")],
+    "Barbell Curl": [("Biceps", "primary")],
+    "Dumbbell Curl": [("Biceps", "primary")],
+    "Hammer Curl": [("Biceps", "primary"), ("Forearms", "secondary")],
+    "Tricep Pushdown": [("Triceps", "primary")],
+    "Dips": [("Triceps", "primary"), ("Chest", "secondary")],
+    "Overhead Dumbbell Extension": [("Triceps", "primary")],
+    "Wrist Curl": [("Forearms", "primary")],
+    "Reverse Wrist Curl": [("Forearms", "primary")],
+    "Squat": [("Quads", "primary"), ("Glutes", "secondary"), ("Hamstrings", "secondary")],
+    "Leg Press": [("Quads", "primary"), ("Glutes", "secondary"), ("Hamstrings", "secondary")],
+    "Lunge": [("Quads", "primary"), ("Glutes", "secondary"), ("Hamstrings", "secondary")],
+    "Leg Curl": [("Hamstrings", "primary")],
+    "Leg Extension": [("Quads", "primary")],
+    "Calf Raise": [("Calves", "primary")],
+    "Hip Thrust": [("Glutes", "primary")],
+    "Glute Kickback": [("Glutes", "primary")],
+    "Abductor Machine": [("Abductors", "primary")],
+    "Crunch": [("Core", "primary")],
+    "Plank": [("Core", "primary")],
+    "Hanging Leg Raise": [("Core", "primary")],
+    "Cable Woodchopper": [("Obliques", "primary")],
+}
+
+
 def seed_equipment():
     with Session() as db:
         existing = db.scalars(select(Equipment.name)).all()
@@ -143,8 +179,43 @@ def seed_exercises():
             db.commit()
 
 
+def seed_exercise_muscle_mapping():
+    with Session() as db:
+        muscle_map = {m.name: m.id for m in db.scalars(select(MuscleGroup)).all()}
+        exercise_map = {e.name: e.id for e in db.scalars(select(Exercise)).all()}
+
+        emg_rows = []
+        for ex_name, muscles in EXERCISE_MUSCLES.items():
+            ex_id = exercise_map.get(ex_name)
+
+            if not ex_id:
+                continue
+
+            for mu_name, role in muscles:
+                mu_id = muscle_map.get(mu_name)
+
+                if mu_id:
+                    emg_rows.append({
+                        "exercise_id": ex_id,
+                        "muscle_group_id": mu_id,
+                        "role": role
+                    })
+
+        existing = set(
+            (row.exercise_id, row.muscle_group_id)
+            for row in db.scalars(select(ExerciseMuscleGroup)).all()
+        )
+
+        new_rows = [row for row in emg_rows if (row["exercise_id"], row["muscle_group_id"]) not in existing]
+
+        if new_rows:
+            db.execute(insert(ExerciseMuscleGroup), new_rows)
+            db.commit()
+
+
 
 if __name__ == "__main__":
     seed_equipment()
     seed_muscle_groups()
     seed_exercises()
+    seed_exercise_muscle_mapping()
