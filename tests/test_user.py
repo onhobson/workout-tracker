@@ -4,6 +4,8 @@ from fastapi.testclient import TestClient
 
 from app.core.limits import USERNAME_MAX_LENGTH, EMAIL_MAX_LENGTH
 
+VERY_LONG_NAME = "a" * (USERNAME_MAX_LENGTH + 12)
+VERY_LONG_EMAIL = "a" * (EMAIL_MAX_LENGTH + 12) + "@example.com"
 
 def create_user(client: TestClient, username="username", email="user@example.com", password="12345"):
     return client.post(
@@ -60,15 +62,13 @@ class TestCreateUser:
 
     
     def test_create_user_username_max_length(self, client: TestClient):
-        a_very_long_name = "a" * (USERNAME_MAX_LENGTH + 1)
-        response = create_user(client, username=a_very_long_name)
+        response = create_user(client, username=VERY_LONG_NAME)
 
         assert response.status_code == 422
 
     
     def test_create_user_email_max_length(self, client: TestClient):
-        a_very_long_email = "a" * (EMAIL_MAX_LENGTH + 1) + "@example.com"
-        response = create_user(client, email=a_very_long_email)
+        response = create_user(client, email=VERY_LONG_EMAIL)
 
         assert response.status_code == 422
 
@@ -209,11 +209,10 @@ class TestUpdateUser:
 
 
     def test_update_user_username_max_length(self, auth_client: TestClient):
-        a_very_long_name = "a" * (USERNAME_MAX_LENGTH + 1)
         response = auth_client.put(
             "/users",
             json={
-                "username": a_very_long_name
+                "username": VERY_LONG_NAME
             }
         )
 
@@ -221,11 +220,10 @@ class TestUpdateUser:
 
     
     def test_update_user_email_length(self, auth_client: TestClient):
-        a_very_long_email = "a" * (EMAIL_MAX_LENGTH + 1) + "@example.com"
         response = auth_client.put(
             "/users",
             json={
-                "email": a_very_long_email
+                "email": VERY_LONG_EMAIL
             }
         )
 
