@@ -5,6 +5,9 @@ from fastapi.testclient import TestClient
 from app.core.limits import WORKOUT_NAME_MAX_LENGTH, NOTES_MAX_LENGTH
 from tests.factories import workout_factory
 
+VERY_LONG_NAME = "a" * (WORKOUT_NAME_MAX_LENGTH + 12)
+VERY_LONG_NOTES = "a" * (NOTES_MAX_LENGTH + 12)
+
 class TestCreateWorkout():
     def test_create_workout(self, auth_client: TestClient):
         response = auth_client.post(
@@ -83,11 +86,10 @@ class TestCreateWorkout():
 
     
     def test_create_workout_name_max_length(self, auth_client: TestClient):
-        a_very_long_name = "a" * (WORKOUT_NAME_MAX_LENGTH + 12)
         response = auth_client.post(
             "/workouts",
             json={
-                "name": a_very_long_name,
+                "name": VERY_LONG_NAME,
                 "notes": "notes"
             }
         )
@@ -96,12 +98,11 @@ class TestCreateWorkout():
 
 
     def test_create_workout_notes_max_length(self, auth_client: TestClient):
-        very_long_notes = "a" * (NOTES_MAX_LENGTH + 12)
         response = auth_client.post(
             "/workouts",
             json={
                 "name": "Workout",
-                "notes": very_long_notes
+                "notes": VERY_LONG_NOTES
             }
         )
 
@@ -230,6 +231,32 @@ class TestUpdateWorkout():
         )
 
         assert response.status_code == 404
+
+    
+    def test_update_workout_name_max_length(self, auth_client: TestClient, workout_factory):
+        workout = workout_factory()
+
+        response = auth_client.put(
+            f"/workouts/{workout.id}",
+            json={
+                "name": VERY_LONG_NAME
+            }
+        )
+
+        assert response.status_code == 422
+
+
+    def test_update_workout_notes_max_length(self, auth_client: TestClient, workout_factory):
+        workout = workout_factory()
+
+        response = auth_client.put(
+            f"/workouts/{workout.id}",
+            json={
+                "notes": VERY_LONG_NOTES
+            }
+        )
+
+        assert response.status_code == 422
 
 
 class TestDeleteWorkout():
