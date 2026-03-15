@@ -7,6 +7,7 @@ from app.db.models import Equipment, MuscleGroup, Exercise, ExerciseMuscleGroup
 EQUIPMENT = [
     {"name": "Barbell", "input_mode": "barbell"},
     {"name": "Dumbbell", "input_mode": "double"},
+    {"name": "Dumbbell, Single", "input_mode": "single"},
     {"name": "Kettlebell", "input_mode": "single"},
     {"name": "Machine", "input_mode": "single"},
     {"name": "Cable", "input_mode": "single"},
