@@ -34,9 +34,20 @@ class UserRead(UserBase):
 
 
 class UserUpdate(BaseModel):
-    username: Annotated[str | None, Field(default=None, min_length=1, max_length=32)]
-    email: Annotated[EmailStr | None, Field(default=None, min_length=1, max_length=254)]
-    password: Annotated[str | None, Field(default=None, min_length=1)]
+    username: Annotated[str | None, Field(
+        default=None, 
+        min_length=1, 
+        max_length=USERNAME_MAX_LENGTH,
+    )]
+    email: Annotated[EmailStr | None, Field(
+        default=None, 
+        min_length=1, 
+        max_length=EMAIL_MAX_LENGTH,
+    )]
+    password: Annotated[str | None, Field(
+        default=None, 
+        min_length=1,
+    )]
 
     @field_validator("username", "email")
     def normalize(cls, value: str | None) -> str | None:
