@@ -1,8 +1,11 @@
 from datetime import datetime
 from typing import List
 
-from sqlalchemy import DateTime, ForeignKey, UniqueConstraint, create_engine, func
+from sqlalchemy import CheckConstraint, DateTime, ForeignKey, UniqueConstraint, create_engine, func, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+
+import app.core.limits as LIMIT
+from app.db.constraints import range_constraint
 
 class Base(DeclarativeBase):
     pass
@@ -10,11 +13,23 @@ class Base(DeclarativeBase):
 
 class User(Base):
     __tablename__ = "users"
+    __table_args__ = (
+        CheckConstraint(f"LENGTH(username) >= {LIMIT.USERNAME_MIN_LENGTH}", "chk_username_min"),
+        CheckConstraint(f"LENGTH(email) >= {LIMIT.EMAIL_MIN_LENGTH}", "chk_email_min"),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    username: Mapped[str] = mapped_column(unique=True, nullable=False)
-    email: Mapped[str] = mapped_column(unique=True, nullable=False)
+    username: Mapped[str] = mapped_column(
+        String(LIMIT.USERNAME_MAX_LENGTH),
+        unique=True, 
+        nullable=False
+    )
+    email: Mapped[str] = mapped_column(
+        String(LIMIT.EMAIL_MAX_LENGTH),
+        unique=True, 
+        nullable=False
+    )
     hashed_password: Mapped[str] = mapped_column(nullable=False)
 
     workouts: Mapped[List["WorkoutSession"]] = relationship(back_populates="user")
@@ -36,8 +51,14 @@ class WorkoutSession(Base):
         nullable=False,
     )
 
-    name: Mapped[str] = mapped_column(nullable=False)
-    notes: Mapped[str|None] = mapped_column(nullable=True)
+    name: Mapped[str] = mapped_column(
+        String(LIMIT.WORKOUT_NAME_MAX_LENGTH),
+        nullable=False,
+    )
+    notes: Mapped[str|None] = mapped_column(
+        String(LIMIT.NOTES_MAX_LENGTH),
+        nullable=True,
+    )
 
     user: Mapped["User"] = relationship(back_populates="workouts")
     sets: Mapped[List["Set"]] = relationship(back_populates="workout")
@@ -46,6 +67,11 @@ class WorkoutSession(Base):
 class Set(Base):
     __tablename__ = "sets"
     __table_args__ = (
+        range_constraint("workout_id", 0, name="chk_set_workout_id_min"),
+        range_constraint("exercise_id", 0, name="chk_set_exercise_id_min"),
+        range_constraint("reps", LIMIT.REPS_MIN, LIMIT.REPS_MAX, "chk_set_reps_range"),
+        range_constraint("weight", LIMIT.WEIGHT_MIN, LIMIT.WEIGHT_MAX, "chk_set_weight_range"),
+        range_constraint("rest", LIMIT.REST_MIN, LIMIT.REST_MAX, "chk_set_rest_range"),
         UniqueConstraint("workout_id", "exercise_id", "set_number", name="uq_exercise_set_per_workout"),
     )
 
@@ -71,6 +97,10 @@ class Set(Base):
 
 class Exercise(Base):
     __tablename__ = "exercises"
+    __table_args__ = (
+        range_constraint("equipment_id", 0, name="chk_exercise_equipment_id_min"),
+        CheckConstraint("LENGTH(name) >= 0", "chk_exercise_name_min"),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
@@ -83,7 +113,10 @@ class Exercise(Base):
         nullable=True,
     )
 
-    name: Mapped[str] = mapped_column(nullable=False)
+    name: Mapped[str] = mapped_column(
+        String(LIMIT.EXERCISE_NAME_MAX_LENGTH),
+        nullable=False,
+    )
 
     equipment: Mapped["Equipment"] = relationship()
     muscles: Mapped[List["ExerciseMuscleGroup"]] = relationship(back_populates="exercise")
@@ -94,7 +127,7 @@ class Equipment(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    name: Mapped[str] = mapped_column(nullable=False)
+    name: Mapped[str] = mapped_column(unique=True, nullable=False)
     input_mode: Mapped[str] = mapped_column(nullable=False)
 
 
@@ -103,7 +136,7 @@ class MuscleGroup(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    name: Mapped[str] = mapped_column(nullable=False)
+    name: Mapped[str] = mapped_column(unique=True, nullable=False)
 
     exercises: Mapped[List["ExerciseMuscleGroup"]] = relationship(back_populates="muscle")
 

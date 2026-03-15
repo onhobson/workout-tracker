@@ -1,13 +1,27 @@
-from pydantic import BaseModel, ConfigDict
+from typing import Annotated
 
+from pydantic import BaseModel, ConfigDict, Field
+
+import app.core.limits as LIMIT
 from app.schemas.common import ExerciseSummary
 
 class SetBase(BaseModel):
-    workout_id: int
-    exercise_id: int
-    reps: int
-    weight: int = 0
-    rest: int | None = None
+    workout_id: Annotated[int, Field(ge=0)]
+    exercise_id: Annotated[int, Field(ge=0)]
+    reps: Annotated[int, Field(
+        ge=LIMIT.REPS_MIN, 
+        lt=LIMIT.REPS_MAX,
+    )]
+    weight: Annotated[int, Field(
+        default=0, 
+        ge=LIMIT.WEIGHT_MIN, 
+        lt=LIMIT.WEIGHT_MAX,
+    )]
+    rest: Annotated[int | None, Field(
+        default=None, 
+        ge=LIMIT.REST_MIN, 
+        lt=LIMIT.REST_MAX,
+    )]
 
 
 class SetCreate(SetBase):
@@ -24,7 +38,19 @@ class SetRead(SetBase):
 
 
 class SetUpdate(BaseModel):
-    exercise_id: int | None = None
-    reps: int | None = None
-    weight: int | None = None
-    rest: int | None = None
+    exercise_id: Annotated[int | None, Field(default=None, ge=0)]
+    reps: Annotated[int | None, Field(
+        default=None,
+        ge=LIMIT.REPS_MIN, 
+        lt=LIMIT.REPS_MAX,
+    )]
+    weight:  Annotated[int | None, Field(
+        default=None, 
+        ge=LIMIT.WEIGHT_MIN, 
+        lt=LIMIT.WEIGHT_MAX,
+    )]
+    rest:  Annotated[int | None, Field(
+        default=None, 
+        ge=LIMIT.REST_MIN, 
+        lt=LIMIT.REST_MAX,
+    )]
