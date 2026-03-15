@@ -97,7 +97,7 @@ class TestCreateSet():
         set_responses.append(create_dummy_set(exercise))
         set_responses.append(create_dummy_set(exercise))
 
-        exercise_two = exercise_factory()
+        exercise_two = exercise_factory(name="Dumbbell")
         set_responses.append(create_dummy_set(exercise_two))
         
         set_responses.append(create_dummy_set(exercise))
