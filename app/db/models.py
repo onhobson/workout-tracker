@@ -127,7 +127,7 @@ class Equipment(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    name: Mapped[str] = mapped_column(nullable=False)
+    name: Mapped[str] = mapped_column(unique=True, nullable=False)
     input_mode: Mapped[str] = mapped_column(nullable=False)
 
 
@@ -136,7 +136,7 @@ class MuscleGroup(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    name: Mapped[str] = mapped_column(nullable=False)
+    name: Mapped[str] = mapped_column(unique=True, nullable=False)
 
     exercises: Mapped[List["ExerciseMuscleGroup"]] = relationship(back_populates="muscle")
 
