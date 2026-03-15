@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from app.schemas.common import ExerciseSummary
 
@@ -20,8 +20,7 @@ class SetRead(SetBase):
 
     exercise: ExerciseSummary
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class SetUpdate(BaseModel):
