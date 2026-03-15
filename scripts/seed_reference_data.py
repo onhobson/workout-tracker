@@ -56,54 +56,54 @@ MUSCLE_GROUPS = [
 
 EXERCISES = [
     # Chest
-    {"name": "Bench Press", "equipment_id": 1, "created_by_user_id": None},  # Barbell
-    {"name": "Incline Bench Press", "equipment_id": 1, "created_by_user_id": None},
-    {"name": "Dumbbell Fly", "equipment_id": 2, "created_by_user_id": None},
-    {"name": "Push-Up", "equipment_id": 6, "created_by_user_id": None},  # Bodyweight
+    {"name": "Bench Press", "equipment": "Barbell"},  # Barbell
+    {"name": "Incline Bench Press", "equipment": "Dumbbell"},
+    {"name": "Dumbbell Fly", "equipment": "Dumbbell"},
+    {"name": "Push-Up", "equipment": "Bodyweight"},  # Bodyweight
 
     # Back
-    {"name": "Pull-Up", "equipment_id": 6, "created_by_user_id": None},
-    {"name": "Lat Pulldown", "equipment_id": 5, "created_by_user_id": None},  # Cable
-    {"name": "Barbell Row", "equipment_id": 1, "created_by_user_id": None},
-    {"name": "Dumbbell Row", "equipment_id": 2, "created_by_user_id": None},
+    {"name": "Pull-Up", "equipment": "Bodyweight"},
+    {"name": "Lat Pulldown", "equipment": "Cable"},  # Cable
+    {"name": "Barbell Row", "equipment": "Barbell"},
+    {"name": "Dumbbell Row", "equipment": "Dumbbell"},
 
     # Shoulders
-    {"name": "Overhead Press", "equipment_id": 1, "created_by_user_id": None},
-    {"name": "Dumbbell Lateral Raise", "equipment_id": 2, "created_by_user_id": None},
-    {"name": "Cable Face Pull", "equipment_id": 5, "created_by_user_id": None},
+    {"name": "Overhead Press", "equipment": "Barbell"},
+    {"name": "Dumbbell Lateral Raise", "equipment": "Dumbbell"},
+    {"name": "Cable Face Pull", "equipment": "Cable"},
 
     # Biceps
-    {"name": "Barbell Curl", "equipment_id": 1, "created_by_user_id": None},
-    {"name": "Dumbbell Curl", "equipment_id": 2, "created_by_user_id": None},
-    {"name": "Hammer Curl", "equipment_id": 2, "created_by_user_id": None},
+    {"name": "Barbell Curl", "equipment": "Barbell"},
+    {"name": "Dumbbell Curl", "equipment": "Dumbbell"},
+    {"name": "Hammer Curl", "equipment": "Dumbbell"},
 
     # Triceps
-    {"name": "Tricep Pushdown", "equipment_id": 5, "created_by_user_id": None},
-    {"name": "Dips", "equipment_id": 6, "created_by_user_id": None},
-    {"name": "Overhead Dumbbell Extension", "equipment_id": 2, "created_by_user_id": None},
+    {"name": "Tricep Pushdown", "equipment": "Cable"},
+    {"name": "Dips", "equipment": "Bodyweight"},
+    {"name": "Overhead Dumbbell Extension", "equipment": "Dumbbell"},
 
     # Forearms
-    {"name": "Wrist Curl", "equipment_id": 2, "created_by_user_id": None},
-    {"name": "Reverse Wrist Curl", "equipment_id": 2, "created_by_user_id": None},
+    {"name": "Wrist Curl", "equipment": "Dumbbell"},
+    {"name": "Reverse Wrist Curl", "equipment": "Dumbbell"},
 
     # Legs
-    {"name": "Squat", "equipment_id": 1, "created_by_user_id": None},  # Barbell
-    {"name": "Leg Press", "equipment_id": 4, "created_by_user_id": None},  # Machine
-    {"name": "Lunge", "equipment_id": 2, "created_by_user_id": None},  # Dumbbell
-    {"name": "Leg Curl", "equipment_id": 4, "created_by_user_id": None},
-    {"name": "Leg Extension", "equipment_id": 4, "created_by_user_id": None},
-    {"name": "Calf Raise", "equipment_id": 2, "created_by_user_id": None},
+    {"name": "Squat", "equipment": "Barbell"},  # Barbell
+    {"name": "Leg Press", "equipment": "Machine"},  # Machine
+    {"name": "Lunge", "equipment": "Dumbbell"},  # Dumbbell
+    {"name": "Leg Curl", "equipment": "Machine"},
+    {"name": "Leg Extension", "equipment": "Machine"},
+    {"name": "Calf Raise", "equipment": "Dumbbell"},
 
     # Glutes / Hips
-    {"name": "Hip Thrust", "equipment_id": 1, "created_by_user_id": None},
-    {"name": "Glute Kickback", "equipment_id": 5, "created_by_user_id": None},  # Cable
-    {"name": "Abductor Machine", "equipment_id": 4, "created_by_user_id": None},
+    {"name": "Hip Thrust", "equipment": "Barbell"},
+    {"name": "Glute Kickback", "equipment": "Cable"},  # Cable
+    {"name": "Abductor Machine", "equipment": "Machine"},
 
     # Core / Abs
-    {"name": "Crunch", "equipment_id": 6, "created_by_user_id": None},
-    {"name": "Plank", "equipment_id": 6, "created_by_user_id": None},
-    {"name": "Hanging Leg Raise", "equipment_id": 6, "created_by_user_id": None},
-    {"name": "Cable Woodchopper", "equipment_id": 5, "created_by_user_id": None},
+    {"name": "Crunch", "equipment": "Bodyweight"},
+    {"name": "Plank", "equipment": "Bodyweight"},
+    {"name": "Hanging Leg Raise", "equipment": "Bodyweight"},
+    {"name": "Cable Woodchopper", "equipment": "Cable"},
 ]
 
 
@@ -169,10 +169,19 @@ def seed_muscle_groups():
 
 def seed_exercises():
     with Session() as db:
+        equipment_map = {e.name: e.id for e in db.scalars(select(Equipment)).all()}
+
+        ex_rows = []
+        for row in EXERCISES:
+            ex_rows.append({
+                "name": row["name"],
+                "equipment_id": equipment_map[row["equipment"]]
+            })
+
         existing = db.scalars(select(Exercise.name)).all()
         existing_set = set(existing)
 
-        new_rows = [row for row in EXERCISES if row["name"] not in existing_set]
+        new_rows = [row for row in ex_rows if row["name"] not in existing_set]
 
         if new_rows:
             db.execute(insert(Exercise), new_rows)
