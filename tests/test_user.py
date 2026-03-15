@@ -208,6 +208,30 @@ class TestUpdateUser:
         assert response.status_code == 200
 
 
+    def test_update_user_username_max_length(self, auth_client: TestClient):
+        a_very_long_name = "a" * (USERNAME_MAX_LENGTH + 1)
+        response = auth_client.put(
+            "/users",
+            json={
+                "username": a_very_long_name
+            }
+        )
+
+        assert response.status_code == 422
+
+    
+    def test_update_user_email_length(self, auth_client: TestClient):
+        a_very_long_email = "a" * (EMAIL_MAX_LENGTH + 1) + "@example.com"
+        response = auth_client.put(
+            "/users",
+            json={
+                "email": a_very_long_email
+            }
+        )
+
+        assert response.status_code == 422
+
+
 class TestDeleteUser:
     def test_delete_user(self, auth_client: TestClient):
         response = auth_client.delete(
