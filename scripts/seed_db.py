@@ -30,39 +30,7 @@ def seed():
     db.add_all(workouts)
     db.commit()
     db.refresh(workouts[0])
-
-    equipment = Equipment(
-        name="Equipment",
-        input_mode="Dumbbell",
-    )
-
-    db.add(equipment)
-    db.commit()
-
-    muscle = MuscleGroup(
-        name="Muscle",
-    )
-
-    db.add(muscle)
-    db.commit()
-
-    exercises = [
-        Exercise(equipment_id=1, name="Exercise"),
-        Exercise(equipment_id=1, name="Other exercise"),
-    ]
-
-    db.add_all(exercises)
-    db.commit()
-
-    assoc = ExerciseMuscleGroup(
-        exercise_id=1,
-        muscle_group_id=1,
-        role="primary",
-    )
-
-    db.add(assoc)
-    db.commit()
-
+    
     sets = [
         Set(workout_id=workouts[0].id, exercise_id=1, set_number=1, reps=8, weight=120),
         Set(workout_id=workouts[0].id, exercise_id=1, set_number=2, reps=6, weight=135),
@@ -70,9 +38,7 @@ def seed():
     ]
 
     db.add_all(sets)
-
     db.commit()
-
     db.close()
 
 

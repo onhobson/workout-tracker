@@ -137,6 +137,7 @@ class MuscleGroup(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
 
     name: Mapped[str] = mapped_column(unique=True, nullable=False)
+    is_primary: Mapped[bool] = mapped_column(nullable=False)
 
     exercises: Mapped[List["ExerciseMuscleGroup"]] = relationship(back_populates="muscle")
 
