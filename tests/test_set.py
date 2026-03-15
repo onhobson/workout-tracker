@@ -1,7 +1,14 @@
+import pytest
+
 from fastapi.testclient import TestClient
 
 from tests.factories import set_factory, workout_factory, exercise_factory, equipment_factory
 
+from app.core.limits import (
+    REPS_MIN, REPS_MAX,
+    WEIGHT_MIN, WEIGHT_MAX,
+    REST_MIN, REST_MAX
+)
 
 class TestCreateSet():
     def test_create_set(self, auth_client: TestClient, workout_factory, exercise_factory):
@@ -104,6 +111,77 @@ class TestCreateSet():
         assert set_responses[2]["set_number"] == 1
         assert set_responses[3]["set_number"] == 3
 
+
+    @pytest.mark.parametrize(
+            "reps",
+            [
+                (-1),
+                (99999999),
+            ]
+    )
+    def test_create_set_reps_range(self, auth_client: TestClient, reps, workout_factory, exercise_factory):
+        workout = workout_factory()
+        exercise = exercise_factory()
+
+        response = auth_client.post(
+            "/sets",
+            json={
+                "workout_id": workout.id,
+                "exercise_id": exercise.id,
+                "reps": reps
+            }
+        )
+
+        assert response.status_code == 422
+
+
+    @pytest.mark.parametrize(
+        "weight",
+        [
+            (-1),
+            (99999999),
+        ]
+    )
+    def test_create_set_weight_range(self, auth_client: TestClient, weight, workout_factory, exercise_factory):
+        workout = workout_factory()
+        exercise = exercise_factory()
+
+        response = auth_client.post(
+            "/sets",
+            json={
+                "workout_id": workout.id,
+                "exercise_id": exercise.id,
+                "reps": 8,
+                "weight": weight
+            }
+        )
+
+        assert response.status_code == 422
+
+
+    @pytest.mark.parametrize(
+        "rest",
+        [
+            (-1),
+            (99999999),
+        ]
+    )
+    def test_create_set_rest_range(self, auth_client: TestClient, rest, workout_factory, exercise_factory):
+        workout = workout_factory()
+        exercise = exercise_factory()
+
+        response = auth_client.post(
+            "/sets",
+            json={
+                "workout_id": workout.id,
+                "exercise_id": exercise.id,
+                "reps": 8,
+                "rest": rest
+            }
+        )
+
+        assert response.status_code == 422
+        
 
 class TestReadSet():
     def test_read_set(self, auth_client: TestClient, set_factory):
