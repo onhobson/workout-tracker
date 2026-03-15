@@ -2,12 +2,19 @@ from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 
+from app.core.limits import USERNAME_MAX_LENGTH, EMAIL_MAX_LENGTH
 from app.schemas.workout import WorkoutRead
 
 
 class UserBase(BaseModel):
-    username: Annotated[str, Field(min_length=1, max_length=32)]
-    email: Annotated[EmailStr, Field(min_length=1, max_length=254)]
+    username: Annotated[str, Field(
+        min_length=1, 
+        max_length=USERNAME_MAX_LENGTH,
+    )]
+    email: Annotated[EmailStr, Field(
+        min_length=1, 
+        max_length=EMAIL_MAX_LENGTH,
+    )]
 
     @field_validator("username", "email")
     def normalize(cls, value: str) -> str:
