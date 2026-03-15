@@ -1,13 +1,15 @@
-from pydantic import BaseModel, ConfigDict
+from typing import Annotated
+
+from pydantic import BaseModel, ConfigDict, Field
 
 from app.schemas.common import ExerciseSummary
 
 class SetBase(BaseModel):
-    workout_id: int
-    exercise_id: int
-    reps: int
-    weight: int = 0
-    rest: int | None = None
+    workout_id: Annotated[int, Field(ge=0)]
+    exercise_id: Annotated[int, Field(ge=0)]
+    reps: Annotated[int, Field(ge=0, lt=1000)]
+    weight: Annotated[int, Field(default=0, ge=0, lt=10000)]
+    rest: Annotated[int | None, Field(default=None, ge=0, lt=10000)]
 
 
 class SetCreate(SetBase):
@@ -24,7 +26,7 @@ class SetRead(SetBase):
 
 
 class SetUpdate(BaseModel):
-    exercise_id: int | None = None
-    reps: int | None = None
-    weight: int | None = None
-    rest: int | None = None
+    exercise_id: Annotated[int | None, Field(default=None, ge=0)]
+    reps: Annotated[int | None, Field(default=None, ge=0, lt=1000)]
+    weight:  Annotated[int | None, Field(default=None, ge=0, lt=10000)]
+    rest:  Annotated[int | None, Field(default=None, ge=0, lt=10000)]

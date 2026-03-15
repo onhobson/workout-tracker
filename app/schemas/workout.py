@@ -1,12 +1,13 @@
 from datetime import datetime
+from typing import Annotated
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from app.schemas.set import SetRead
 
 class WorkoutBase(BaseModel):
-    name: str | None = None
-    notes: str | None = None
+    name: Annotated[str | None, Field(default=None, max_length=100)]
+    notes: Annotated[str | None, Field(default=None, max_length=500)]
 
 
 class WorkoutCreate(WorkoutBase):
