@@ -1,8 +1,8 @@
 from datetime import datetime
-import pytest
 
 from fastapi.testclient import TestClient
 
+from app.core.limits import WORKOUT_NAME_MAX_LENGTH, NOTES_MAX_LENGTH
 from tests.factories import workout_factory
 
 class TestCreateWorkout():
@@ -65,6 +65,7 @@ class TestCreateWorkout():
         assert response_data["name"] == default_name + " (2)"
         assert response_data["notes"] == "Workout notes"
 
+
     def test_create_workout_no_notes(self, auth_client: TestClient):
         response = auth_client.post(
             "/workouts",
@@ -79,6 +80,32 @@ class TestCreateWorkout():
 
         assert response_data["name"] == "Workout"
         assert response_data["notes"] == None
+
+    
+    def test_create_workout_name_max_length(self, auth_client: TestClient):
+        a_very_long_name = "a" * (WORKOUT_NAME_MAX_LENGTH + 12)
+        response = auth_client.post(
+            "/workouts",
+            json={
+                "name": a_very_long_name,
+                "notes": "notes"
+            }
+        )
+
+        assert response.status_code == 422
+
+
+    def test_create_workout_notes_max_length(self, auth_client: TestClient):
+        very_long_notes = "a" * (NOTES_MAX_LENGTH + 12)
+        response = auth_client.post(
+            "/workouts",
+            json={
+                "name": "Workout",
+                "notes": very_long_notes
+            }
+        )
+
+        assert response.status_code == 422
     
     
 class TestReadWorkout():
