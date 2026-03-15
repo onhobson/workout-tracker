@@ -181,7 +181,7 @@ class TestCreateSet():
         )
 
         assert response.status_code == 422
-        
+
 
 class TestReadSet():
     def test_read_set(self, auth_client: TestClient, set_factory):
@@ -315,6 +315,67 @@ class TestUpdateSet():
         )
 
         assert response.status_code == 404
+
+    
+    @pytest.mark.parametrize(
+        "reps",
+        [
+            (-1),
+            (99999999),
+        ]
+    )
+    def test_update_set_reps_range(self, auth_client: TestClient, reps, set_factory):
+        new_set = set_factory()
+
+        response = auth_client.put(
+            f"/sets/{new_set.id}",
+            json={
+                "reps": reps
+            }
+        )
+
+        assert response.status_code == 422
+
+
+    @pytest.mark.parametrize(
+        "weight",
+        [
+            (-1),
+            (99999999),
+        ]
+    )
+    def test_update_set_weight_range(self, auth_client: TestClient, weight, set_factory):
+        new_set = set_factory()
+
+        response = auth_client.put(
+            f"/sets/{new_set.id}",
+            json={
+                "weight": weight
+            }
+        )
+
+        assert response.status_code == 422
+
+
+    @pytest.mark.parametrize(
+        "rest",
+        [
+            (-1),
+            (99999999),
+        ]
+    )
+    def test_update_set_rest_range(self, auth_client: TestClient, rest, set_factory):
+        new_set = set_factory()
+
+        response = auth_client.put(
+            f"/sets/{new_set.id}",
+            json={
+                "rest": rest
+            }
+        )
+
+        assert response.status_code == 422
+
 
 
 class TestDeleteSet():
