@@ -2,6 +2,8 @@ import pytest
 
 from fastapi.testclient import TestClient
 
+from app.core.limits import USERNAME_MAX_LENGTH, EMAIL_MAX_LENGTH
+
 
 def create_user(client: TestClient, username="username", email="user@example.com", password="12345"):
     return client.post(
@@ -53,6 +55,20 @@ class TestCreateUser:
     )
     def test_create_user_invalid_values(self, client: TestClient, username, email, password):
         response = create_user(client, username, email, password)
+
+        assert response.status_code == 422
+
+    
+    def test_create_user_username_max_length(self, client: TestClient):
+        a_very_long_name = "a" * (USERNAME_MAX_LENGTH + 1)
+        response = create_user(client, username=a_very_long_name)
+
+        assert response.status_code == 422
+
+    
+    def test_create_user_email_max_length(self, client: TestClient):
+        a_very_long_email = "a" * (EMAIL_MAX_LENGTH + 1) + "@example.com"
+        response = create_user(client, email=a_very_long_email)
 
         assert response.status_code == 422
 
