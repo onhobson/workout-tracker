@@ -1,9 +1,12 @@
 from datetime import datetime
-import pytest
 
 from fastapi.testclient import TestClient
 
+from app.core.limits import WORKOUT_NAME_MAX_LENGTH, NOTES_MAX_LENGTH
 from tests.factories import workout_factory
+
+VERY_LONG_NAME = "a" * (WORKOUT_NAME_MAX_LENGTH + 12)
+VERY_LONG_NOTES = "a" * (NOTES_MAX_LENGTH + 12)
 
 class TestCreateWorkout():
     def test_create_workout(self, auth_client: TestClient):
@@ -65,6 +68,7 @@ class TestCreateWorkout():
         assert response_data["name"] == default_name + " (2)"
         assert response_data["notes"] == "Workout notes"
 
+
     def test_create_workout_no_notes(self, auth_client: TestClient):
         response = auth_client.post(
             "/workouts",
@@ -79,6 +83,30 @@ class TestCreateWorkout():
 
         assert response_data["name"] == "Workout"
         assert response_data["notes"] == None
+
+    
+    def test_create_workout_name_max_length(self, auth_client: TestClient):
+        response = auth_client.post(
+            "/workouts",
+            json={
+                "name": VERY_LONG_NAME,
+                "notes": "notes"
+            }
+        )
+
+        assert response.status_code == 422
+
+
+    def test_create_workout_notes_max_length(self, auth_client: TestClient):
+        response = auth_client.post(
+            "/workouts",
+            json={
+                "name": "Workout",
+                "notes": VERY_LONG_NOTES
+            }
+        )
+
+        assert response.status_code == 422
     
     
 class TestReadWorkout():
@@ -203,6 +231,32 @@ class TestUpdateWorkout():
         )
 
         assert response.status_code == 404
+
+    
+    def test_update_workout_name_max_length(self, auth_client: TestClient, workout_factory):
+        workout = workout_factory()
+
+        response = auth_client.put(
+            f"/workouts/{workout.id}",
+            json={
+                "name": VERY_LONG_NAME
+            }
+        )
+
+        assert response.status_code == 422
+
+
+    def test_update_workout_notes_max_length(self, auth_client: TestClient, workout_factory):
+        workout = workout_factory()
+
+        response = auth_client.put(
+            f"/workouts/{workout.id}",
+            json={
+                "notes": VERY_LONG_NOTES
+            }
+        )
+
+        assert response.status_code == 422
 
 
 class TestDeleteWorkout():
