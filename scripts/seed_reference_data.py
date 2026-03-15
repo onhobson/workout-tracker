@@ -145,10 +145,9 @@ EXERCISE_MUSCLES = {
 
 def seed_equipment():
     with Session() as db:
-        existing = db.scalars(select(Equipment.name)).all()
-        existing_set = set(existing)
+        existing = set(db.scalars(select(Equipment.name)).all())
 
-        new_rows = [row for row in EQUIPMENT if row["name"] not in existing_set]
+        new_rows = [row for row in EQUIPMENT if row["name"] not in existing]
 
         if new_rows:
             db.execute(insert(Equipment), new_rows)
@@ -157,10 +156,9 @@ def seed_equipment():
 
 def seed_muscle_groups():
     with Session() as db:
-        existing = db.scalars(select(MuscleGroup.name)).all()
-        existing_set = set(existing)
+        existing = set(db.scalars(select(MuscleGroup.name)).all())
 
-        new_rows = [row for row in MUSCLE_GROUPS if row["name"] not in existing_set]
+        new_rows = [row for row in MUSCLE_GROUPS if row["name"] not in existing]
 
         if new_rows:
             db.execute(insert(MuscleGroup), new_rows)
@@ -178,10 +176,9 @@ def seed_exercises():
                 "equipment_id": equipment_map[row["equipment"]]
             })
 
-        existing = db.scalars(select(Exercise.name)).all()
-        existing_set = set(existing)
+        existing = set(db.scalars(select(Exercise.name)).all())
 
-        new_rows = [row for row in ex_rows if row["name"] not in existing_set]
+        new_rows = [row for row in ex_rows if row["name"] not in existing]
 
         if new_rows:
             db.execute(insert(Exercise), new_rows)
