@@ -9,7 +9,7 @@ from app.schemas.exercise import ExerciseCreate, ExerciseRead, ExerciseUpdate
 router = APIRouter(prefix="/exercises", tags=["Exercises"])
 
 
-@router.get("/", response_model=list[ExerciseSummary])
+@router.get("/", response_model=list[ExerciseRead])
 def get_exercises(
     user: CurrentUser, 
     db: DbSession,
