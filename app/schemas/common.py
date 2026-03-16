@@ -12,3 +12,17 @@ class MuscleGroupSummary(BaseModel):
     name: str
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class EquipmentSummary(BaseModel):
+    id: int
+    name: str
+
+    model_config = ConfigDict(from_attributes=True)
+    
+
+class ExerciseMuscleSummary(BaseModel):
+    muscle: MuscleGroupSummary
+    role: str
+
+    model_config = ConfigDict(from_attributes=True)

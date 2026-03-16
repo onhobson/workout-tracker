@@ -119,7 +119,10 @@ class Exercise(Base):
     )
 
     equipment: Mapped["Equipment"] = relationship()
-    muscles: Mapped[List["ExerciseMuscleGroup"]] = relationship(back_populates="exercise")
+    muscles: Mapped[List["ExerciseMuscleGroup"]] = relationship(
+        back_populates="exercise",
+        cascade="all, delete-orphan"
+    )
 
 
 class Equipment(Base):
