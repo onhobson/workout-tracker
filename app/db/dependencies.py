@@ -1,3 +1,6 @@
+"""
+Database dependencies for FastAPI routes.
+"""
 from typing import Annotated
 
 from fastapi import Depends

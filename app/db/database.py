@@ -1,3 +1,6 @@
+"""
+Database connection and session management for the workout tracker application.
+"""
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 

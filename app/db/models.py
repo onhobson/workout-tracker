@@ -1,3 +1,6 @@
+"""
+SQLAlchemy models for the workout tracker application.
+"""
 from datetime import datetime
 from typing import List
 
