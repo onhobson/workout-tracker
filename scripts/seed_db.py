@@ -1,9 +1,10 @@
 """
 Database seeding script for the workout tracker application.
 This script populates the database with initial data for testing and development purposes.
-Note: Run the reset_db.py script before this to ensure a clean database state."""
+Note: Run the reset_db.py script before this to ensure a clean database state.
+"""
 from app.db.database import Session
-from app.db.models import Equipment, Exercise, ExerciseMuscleGroup, MuscleGroup, User, WorkoutSession, Set
+from app.db.models import User, WorkoutSession, Set
 
 
 def seed():
@@ -34,7 +35,8 @@ def seed():
     db.add_all(workouts)
     db.commit()
     db.refresh(workouts[0])
-    
+    db.refresh(workouts[1])
+
     sets = [
         Set(workout_id=workouts[0].id, exercise_id=1, set_number=1, reps=8, weight=120),
         Set(workout_id=workouts[0].id, exercise_id=1, set_number=2, reps=6, weight=135),

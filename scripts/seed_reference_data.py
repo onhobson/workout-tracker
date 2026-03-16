@@ -226,9 +226,12 @@ def seed_exercise_muscle_mapping():
             db.commit()
 
 
-
-if __name__ == "__main__":
+def seed_all():
     seed_equipment()
     seed_muscle_groups()
     seed_exercises()
     seed_exercise_muscle_mapping()
+
+
+if __name__ == "__main__":
+    seed_all()
