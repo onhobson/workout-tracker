@@ -1,3 +1,6 @@
+"""
+CRUD operations for exercises.
+"""
 from typing import Sequence
 
 from sqlalchemy import select, or_
@@ -14,6 +17,17 @@ def get_exercises(
     user_id: int,
     db: Session
 ) -> Sequence[Exercise]:
+    """
+    Retrieve exercises filtered by muscle group, equipment, and user.
+
+    Args:
+        muscle_id: Optional muscle group ID to filter exercises that target a specific muscle group.
+        equipment_id: Optional equipment ID to filter exercises that use specific equipment.
+        user_id: ID of the user making the request, used to include user-created exercises.
+        db: Database session for querying.
+    Returns:
+        A sequence of Exercise objects matching the specified filters.
+    """
     stmt = select(Exercise).where(
         or_(
             Exercise.created_by_user_id.is_(None),
@@ -35,6 +49,7 @@ def get_exercises(
 
 
 def get_exercise(exercise_id: int, user_id: int, db: Session) -> Exercise | None:
+    """Retrieve a specific exercise by ID, ensuring it is either a default exercise or created by the user."""
     stmt = (
         select(Exercise)
         .where(
@@ -50,6 +65,19 @@ def get_exercise(exercise_id: int, user_id: int, db: Session) -> Exercise | None
 
 
 def create_exercise(exercise_data: ExerciseCreate, user_id: int, db: Session) -> Exercise:
+    """
+    Create a new exercise with the provided data, ensuring all referenced IDs are valid and required fields are not empty.
+    
+    Args:
+        exercise_data: ExerciseCreate object containing the data for the new exercise.
+        user_id: ID of the user creating the exercise, used to set the created_by_user_id field.
+        db: Database session for querying and committing the new exercise.
+    Returns:
+        The newly created Exercise object.
+    Raises:
+        EmptyStringError: If any required string fields are empty.
+        InvalidForeignKeyIDError: If any foreign key IDs do not correspond to existing records in the database.
+    """
     if exercise_data.name.strip() == "":
         raise EmptyStringError("name")
 
@@ -86,6 +114,20 @@ def create_exercise(exercise_data: ExerciseCreate, user_id: int, db: Session) ->
 
 
 def update_exercise(exercise_id: int, exercise_data: ExerciseUpdate, user_id: int, db: Session) -> Exercise | None: 
+    """
+    Update an existing exercise with the provided data, ensuring the exercise belongs to the user and all referenced IDs are valid.
+    
+    Args:
+        exercise_id: ID of the exercise to update.
+        exercise_data: ExerciseUpdate object containing the updated data for the exercise.
+        user_id: ID of the user updating the exercise, used to verify ownership.
+        db: Database session for querying and committing the updated exercise.
+    Returns:
+        The updated Exercise object if the update was successful, or None if the exercise does not exist or does not belong to the user.
+    Raises:
+        EmptyStringError: If any required string fields are empty.
+        InvalidForeignKeyIDError: If any foreign key IDs do not correspond to existing records in the database.
+    """
     stmt = select(Exercise).where(
         Exercise.id == exercise_id,
         Exercise.created_by_user_id == user_id
@@ -131,6 +173,10 @@ def update_exercise(exercise_id: int, exercise_data: ExerciseUpdate, user_id: in
 
 
 def delete_exercise(exercise_id: int, user_id: int, db: Session) -> bool:
+    """
+    Delete an exercise by ID, ensuring it belongs to the user.
+    Returns True if the exercise was deleted, False if the exercise does not exist or does not belong to the user.
+    """
     stmt = select(Exercise).where(
         Exercise.id == exercise_id,
         Exercise.created_by_user_id == user_id
