@@ -1,8 +1,5 @@
 """
-User route enpoints.
-
-Provides API routes for reading, updating, 
-and deleting an authenticated user, or for creating a new user.
+API routes for user management in the workout tracker application.
 """
 from fastapi import APIRouter, HTTPException, status
 
@@ -19,9 +16,7 @@ def get_user(
     user: CurrentUser, 
     db: DbSession
 ):
-    """
-    Return user data for currently authenticated user.
-    """
+    """Return user data for currently authenticated user."""
     user_found = crud_user.get_user(user.id, db)
 
     if not user_found:
@@ -38,9 +33,7 @@ def create_user(
     user: UserCreate,
     db: DbSession
 ):
-    """
-    Create a new user.
-    """
+    """Create a new user."""
     try: 
         return crud_user.create_user(user, db)
     except DuplicateUserError as e:
@@ -61,9 +54,7 @@ def update_user(
     user: CurrentUser,
     db: DbSession
 ):
-    """
-    Update fields of an authenticated user.
-    """
+    """Update fields of an authenticated user."""
     try:
         user_update = crud_user.update_user(user_data, user, db)
     except EmptyStringError as e:
@@ -86,9 +77,7 @@ def delete_user(
     user: CurrentUser,
     db: DbSession
 ):
-    """
-    Delete the currently authenticated user.
-    """
+    """Delete the currently authenticated user."""
     success = crud_user.delete_user(user.id, db)
 
     if not success:

@@ -1,3 +1,6 @@
+"""
+CRUD operations for equipment.
+"""
 from typing import Sequence
 
 from sqlalchemy import select

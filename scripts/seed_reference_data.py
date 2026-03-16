@@ -1,3 +1,9 @@
+"""
+Reference data seeding script for the workout tracker application.
+This script populates the database with reference data such as equipment types, muscle groups, and exercises.
+Checks for existing data to avoid duplicates.
+"""
+
 from sqlalchemy import select, insert
 
 from app.db.database import Session

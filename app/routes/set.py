@@ -1,8 +1,5 @@
 """
-Set route endpoints
-
-Provides API routes for creating, reading, updating,
-and deleting sets belonging to an authenticated user.
+API routes for sets in the workout tracker application.
 """
 from fastapi import APIRouter, HTTPException, status
 
@@ -19,9 +16,7 @@ def get_set(
     user: CurrentUser,
     db: DbSession
 ):
-    """
-    Return set by ID belonging to authenticated user.
-    """
+    """Return set by ID belonging to authenticated user."""
     workout_set = crud_set.get_set(set_id, user.id, db)
     
     if not workout_set:
@@ -39,9 +34,7 @@ def create_set(
     user: CurrentUser,
     db: DbSession
 ):
-    """
-    Create a new set belonging to authenticated user.
-    """
+    """Create a new set belonging to authenticated user."""
     workout_set = crud_set.create_set(set_data, user.id, db)
 
     if not workout_set:
@@ -60,9 +53,7 @@ def update_set(
     user: CurrentUser,
     db: DbSession
 ):
-    """
-    Update a set by ID belonging to authenticated user.
-    """
+    """Update a set by ID belonging to authenticated user."""
     workout_set = crud_set.update_set(set_id, set_data, user.id, db)
 
     if not workout_set:
@@ -80,9 +71,7 @@ def delete_set(
     user: CurrentUser,
     db: DbSession
 ):
-    """
-    Delete a set by ID belonging to authenticated user.
-    """
+    """Delete a set by ID belonging to authenticated user."""
     workout_set = crud_set.delete_set(set_id, user.id, db)
 
     if not workout_set:

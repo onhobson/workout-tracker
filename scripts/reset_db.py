@@ -1,3 +1,6 @@
+"""
+Database reset script for the workout tracker application.
+"""
 from app.db.database import engine
 from app.db.models import Base
 

@@ -1,10 +1,18 @@
+"""
+Naming utilities for the workout tracker application.
+"""
 from datetime import datetime
 import re
 
 def generate_workout_name(base_date: datetime, suffix: int | None = None) -> str:
     """
-    Generate a default workout name for a given date.
-    Optional suffix argument for multiple workouts on the same date.
+    Generate a workout name based on the given date and optional suffix.
+    
+    Args:
+        base_date: The date to base the workout name on.
+        suffix: An optional numeric suffix to differentiate workouts on the same day.
+    Returns:
+        A string in the format "Workout on Mar 12, 2026" or "Workout on Mar 12, 2026 (2)" if suffix is provided.
     """
     workout_name = f"Workout on {base_date.strftime('%b %d, %Y')}"
     if suffix and suffix > 1:

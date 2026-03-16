@@ -1,3 +1,6 @@
+"""
+Common summary schemas for the workout tracker application.
+"""
 from pydantic import BaseModel, ConfigDict
 
 class ExerciseSummary(BaseModel):

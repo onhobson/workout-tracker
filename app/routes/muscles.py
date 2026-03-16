@@ -1,3 +1,6 @@
+"""
+API routes for muscle groups in the workout tracker application.
+"""
 from fastapi import APIRouter, HTTPException, status
 
 from app.crud import muscles as crud_muscles
@@ -9,11 +12,13 @@ router = APIRouter(prefix="/muscles", tags=["Muscles"])
 
 @router.get("/", response_model=list[MuscleGroupRead])
 def get_all_muscle_groups(db: DbSession):
+    """Fetches all muscle groups available in the workout tracker application."""
     return crud_muscles.get_all_muscle_groups(db)
 
 
 @router.get("/{muscle_id}", response_model=MuscleGroupRead)
 def get_muscle_group(muscle_id: int, db: DbSession):
+    """Fetches a specific muscle group by ID."""
     muscle_group = crud_muscles.get_muscle_group(muscle_id, db)
 
     if not muscle_group:

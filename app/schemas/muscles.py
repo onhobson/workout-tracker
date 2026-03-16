@@ -1,3 +1,5 @@
+"""
+Muscle group schemas for the workout tracker application."""
 from pydantic import BaseModel, ConfigDict
 
 from app.schemas.common import ExerciseSummary

@@ -1,5 +1,5 @@
 """
-Database operations related to workouts.
+CRUD operations for workout sessions.
 """
 from datetime import datetime
 from typing import Sequence
@@ -13,7 +13,8 @@ from app.utils.naming import generate_workout_name, parse_suffix
 
 def get_workout(workout_id: int, user_id: int, db: Session) -> WorkoutSession | None:
     """
-    Return one workout by id belonging to a specific user.
+    Retrieve a specific workout session by ID, ensuring it belongs to the user.
+    Returns None if the workout does not exist or does not belong to the user.
     """
     stmt = select(WorkoutSession).where(
         WorkoutSession.id == workout_id, 
@@ -24,7 +25,8 @@ def get_workout(workout_id: int, user_id: int, db: Session) -> WorkoutSession | 
 
 def get_user_workouts(user_id: int, db: Session) -> Sequence[WorkoutSession]:
     """
-    Return all workouts belonging to a specific user.
+    Retrieve all workout sessions belonging to a specific user.
+    Returns a sequence of WorkoutSession objects.
     """
     stmt = select(WorkoutSession).where(WorkoutSession.user_id == user_id)
     return db.scalars(stmt).all()
@@ -32,9 +34,14 @@ def get_user_workouts(user_id: int, db: Session) -> Sequence[WorkoutSession]:
 
 def create_workout(workout: WorkoutCreate, user_id: int, db: Session) -> WorkoutSession:
     """
-    Creates a new workout belonging to a specific user. 
-    
-    Generates a default name if no name is supplied.
+    Create a new workout session for a user. If the workout name is not provided, generate a default name based on the current date and existing workouts.
+
+    Args:
+        workout: WorkoutCreate data for the new workout session.
+        user_id: ID of the user creating the workout session.
+        db: Database session for querying and committing the new workout session.
+    Returns:
+        The created WorkoutSession object.
     """
     if not workout.name:
         today = datetime.now()
@@ -75,6 +82,18 @@ def update_workout(
     user_id: int, 
     db: Session
 ) -> WorkoutSession | None:
+    """
+    Update an existing workout session, ensuring it belongs to the user.
+
+    Args:
+        workout_id: ID of the workout session to update.
+        workout_update: WorkoutUpdate data containing the fields to update.
+        user_id: ID of the user updating the workout session, used to verify ownership.
+        db: Database session for querying and committing the updated workout session.
+    Returns:
+        The updated WorkoutSession object if successful.
+        None if the workout does not exist or does not belong to the user.
+    """
     stmt = select(WorkoutSession).where(
         WorkoutSession.id == workout_id, 
         WorkoutSession.user_id == user_id
@@ -97,6 +116,10 @@ def update_workout(
     
 
 def delete_workout(workout_id: int, user_id: int, db: Session) -> bool:
+    """
+    Delete a specific workout session by ID, ensuring it belongs to the user.
+    Returns True if the workout was deleted, False if the workout does not exist or does not belong to the user.
+    """
     stmt = select(WorkoutSession).where(
         WorkoutSession.id == workout_id, 
         WorkoutSession.user_id == user_id
