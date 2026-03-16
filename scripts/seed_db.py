@@ -1,3 +1,7 @@
+"""
+Database seeding script for the workout tracker application.
+This script populates the database with initial data for testing and development purposes.
+Note: Run the reset_db.py script before this to ensure a clean database state."""
 from app.db.database import Session
 from app.db.models import Equipment, Exercise, ExerciseMuscleGroup, MuscleGroup, User, WorkoutSession, Set
 
