@@ -1,5 +1,5 @@
 """
-Services for handling authentication
+Services for handling authentication.
 """
 from app.dependencies import *
 from app.crud import user as crud_user
