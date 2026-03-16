@@ -1,3 +1,6 @@
+"""
+Equipment schemas for the workout tracker application.
+"""
 from pydantic import BaseModel, ConfigDict
 
 class EquipmentRead(BaseModel):

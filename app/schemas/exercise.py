@@ -1,3 +1,6 @@
+"""
+Exercise schemas for the workout tracker application.
+"""
 from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, Field
