@@ -1,8 +1,5 @@
 """
-Workout route endpoints.
-
-Provides API routes for creating, reading, updating,
-and deleting workouts belonging to an authenticated user.
+API routes for workout management in the workout tracker application.
 """
 from fastapi import APIRouter, HTTPException, status
 
@@ -18,9 +15,7 @@ def get_user_workouts(
     user: CurrentUser, 
     db: DbSession
 ):
-    """
-    Return all workouts belonging to authenticated user.
-    """
+    """Return all workouts belonging to authenticated user."""
     return crud_workout.get_user_workouts(user.id, db)
 
 
@@ -30,9 +25,7 @@ def get_workout(
     user: CurrentUser, 
     db: DbSession
 ):
-    """
-    Return a specific workout by ID belonging to authenticated user.
-    """
+    """Return a specific workout by ID belonging to authenticated user."""
     workout = crud_workout.get_workout(workout_id, user.id, db)
 
     if not workout:
@@ -50,9 +43,7 @@ def create_workout(
     user: CurrentUser, 
     db: DbSession
 ):
-    """
-    Create a workout for the authenticated user.
-    """
+    """Create a workout for the authenticated user."""
     return crud_workout.create_workout(workout, user.id, db)
 
 
@@ -63,9 +54,7 @@ def update_workout(
     user: CurrentUser, 
     db: DbSession
 ):
-    """
-    Update a workout by ID belonging to authenticated user.
-    """
+    """Update a workout by ID belonging to authenticated user."""
     workout = crud_workout.update_workout(workout_id, workout_update, user.id, db)
 
     if not workout:
@@ -83,9 +72,7 @@ def delete_workout(
     user: CurrentUser, 
     db: DbSession
 ):
-    """
-    Delete a workout by ID belonging to authenticated user.
-    """
+    """Delete a workout by ID belonging to authenticated user."""
     workout = crud_workout.delete_workout(workout_id, user.id, db)
 
     if not workout:

@@ -1,9 +1,11 @@
+"""
+API routes for exercises in the workout tracker application.
+"""
 from fastapi import APIRouter, HTTPException, status
 
 from app.core.exceptions import EmptyStringError, InvalidForeignKeyIDError
 from app.crud import exercise as crud_exercise
 from app.dependencies import *
-from app.schemas.common import ExerciseSummary
 from app.schemas.exercise import ExerciseCreate, ExerciseRead, ExerciseUpdate
 
 router = APIRouter(prefix="/exercises", tags=["Exercises"])
@@ -16,11 +18,13 @@ def get_exercises(
     muscle_id: int | None = None,
     equipment_id: int | None = None
 ):
+    """Fetches exercises for the current user, with optional filtering by muscle group and equipment."""
     return crud_exercise.get_exercises(muscle_id, equipment_id, user.id, db)
 
 
 @router.get("/{exercise_id}", response_model=ExerciseRead)
 def get_exercise(exercise_id: int, user: CurrentUser, db: DbSession):
+    """Fetches a specific exercise by ID for the current user."""
     exercise = crud_exercise.get_exercise(exercise_id, user.id, db)
 
     if not exercise:
@@ -34,6 +38,7 @@ def get_exercise(exercise_id: int, user: CurrentUser, db: DbSession):
 
 @router.post("/", response_model=ExerciseRead, status_code=status.HTTP_201_CREATED)
 def create_exercise(exercise_data: ExerciseCreate, user: CurrentUser, db: DbSession):
+    """Creates a new exercise for the current user."""
     try:
         return crud_exercise.create_exercise(exercise_data, user.id, db)
     except EmptyStringError as e:
@@ -50,6 +55,7 @@ def create_exercise(exercise_data: ExerciseCreate, user: CurrentUser, db: DbSess
 
 @router.put("/{exercise_id}", response_model=ExerciseRead)
 def update_exercise(exercise_id: int, exercise_data: ExerciseUpdate, user: CurrentUser, db: DbSession):
+    """Updates an existing exercise for the current user."""
     try:
         exercise = crud_exercise.update_exercise(exercise_id, exercise_data, user.id, db)
     except EmptyStringError as e:
@@ -74,6 +80,7 @@ def update_exercise(exercise_id: int, exercise_data: ExerciseUpdate, user: Curre
 
 @router.delete("/{exercise_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_exercise(exercise_id: int , user: CurrentUser, db: DbSession):
+    """Deletes an exercise by ID for the current user."""
     success = crud_exercise.delete_exercise(exercise_id, user.id, db)
 
     if not success:
