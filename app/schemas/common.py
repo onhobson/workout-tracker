@@ -20,3 +20,9 @@ class EquipmentSummary(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
     
+
+class ExerciseMuscleSummary(BaseModel):
+    muscle: MuscleGroupSummary
+    role: str
+
+    model_config = ConfigDict(from_attributes=True)

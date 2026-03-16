@@ -3,7 +3,7 @@ from typing import Annotated
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.core.limits import EXERCISE_NAME_MAX_LENGTH
-from app.schemas.common import MuscleGroupSummary, EquipmentSummary
+from app.schemas.common import ExerciseMuscleSummary, EquipmentSummary
 
 class ExerciseBase(BaseModel):
     name: Annotated[str, Field(
@@ -11,17 +11,24 @@ class ExerciseBase(BaseModel):
         max_length=EXERCISE_NAME_MAX_LENGTH,
     )]
 
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+
+class ExerciseMuscleCreate(BaseModel):
+    muscle_group_id: Annotated[int , Field(ge=0)]
+    role: str
+
 
 class ExerciseCreate(ExerciseBase):
     equipment_id: Annotated[int, Field(ge=0)]
-    muscle_group_ids: list[Annotated[int, Field(ge=0)]]
+    muscle_groups: list[ExerciseMuscleCreate]
 
 
 class ExerciseRead(ExerciseBase):
     id: int
     
     equipment: EquipmentSummary
-    muscles: list[MuscleGroupSummary]
+    muscles: list[ExerciseMuscleSummary]
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -36,7 +43,6 @@ class ExerciseUpdate(BaseModel):
         default=None,
         ge=0,
     )]
-    muscle_group_ids: Annotated[list[int] | None, Field(
-        default=None,
-        ge=0,
-    )]
+    muscle_groups: list[ExerciseMuscleCreate] | None = None
+    
+    model_config = ConfigDict(str_strip_whitespace=True)
