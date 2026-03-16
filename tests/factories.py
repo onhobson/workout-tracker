@@ -1,7 +1,7 @@
 import pytest
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from app.db.models import Equipment, Exercise, User, WorkoutSession, Set
+from app.db.models import Equipment, Exercise, MuscleGroup, User, WorkoutSession, Set
 
 
 @pytest.fixture()
@@ -107,3 +107,26 @@ def exercise_factory(db_session: Session, equipment_factory):
         return exercise
     
     return create_exercise
+
+
+@pytest.fixture()
+def muscle_factory(db_session: Session):
+
+    def create_muscle(**kwargs):
+
+        defaults = {
+            "name": "Chest",
+            "is_primary": True
+        }
+
+        defaults.update(**kwargs)
+
+        muscle = MuscleGroup(**kwargs)
+
+        db_session.add(muscle)
+        db_session.commit()
+        db_session.refresh(muscle)
+
+        return muscle
+    
+    return create_muscle
