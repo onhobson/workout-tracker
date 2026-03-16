@@ -2,7 +2,7 @@ import pytest
 
 from fastapi.testclient import TestClient
 
-from tests.factories import set_factory, workout_factory, exercise_factory, equipment_factory
+from tests.factories import set_factory, workout_factory, exercise_factory, equipment_factory, muscle_factory
 
 from app.core.limits import (
     REPS_MIN, REPS_MAX,
