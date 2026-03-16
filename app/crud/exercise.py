@@ -56,6 +56,8 @@ def create_exercise(exercise_data: ExerciseCreate, user_id: int, db: Session) ->
     for muscle in exercise_data.muscle_groups:
         if not db.get(MuscleGroup, muscle.muscle_group_id):
             raise InvalidForeignKeyIDError(f"muscle_group_id: {muscle.muscle_group_id}")
+        if muscle.role.strip() == "":
+            raise EmptyStringError("role")
     
     if not db.get(Equipment, exercise_data.equipment_id):
         raise InvalidForeignKeyIDError(f"equipment_id: {exercise_data.equipment_id}")
@@ -83,15 +85,7 @@ def create_exercise(exercise_data: ExerciseCreate, user_id: int, db: Session) ->
     return exercise
 
 
-def update_exercise(exercise_id: int, exercise_data: ExerciseUpdate, user_id: int, db: Session) -> Exercise | None:
-    if exercise_data.muscle_groups:
-        for muscle in exercise_data.muscle_groups:
-            if not db.get(MuscleGroup, muscle.muscle_group_id):
-                raise InvalidForeignKeyIDError(f"muscle_group_id: {muscle.muscle_group_id}")
-    
-    if exercise_data.equipment_id and not db.get(Equipment, exercise_data.equipment_id):
-        raise InvalidForeignKeyIDError(f"equipment_id: {exercise_data.equipment_id}")
- 
+def update_exercise(exercise_id: int, exercise_data: ExerciseUpdate, user_id: int, db: Session) -> Exercise | None: 
     stmt = select(Exercise).where(
         Exercise.id == exercise_id,
         Exercise.created_by_user_id == user_id
@@ -101,6 +95,17 @@ def update_exercise(exercise_id: int, exercise_data: ExerciseUpdate, user_id: in
 
     if not exercise:
         return None
+    
+    if exercise_data.muscle_groups:
+        for muscle in exercise_data.muscle_groups:
+            if not db.get(MuscleGroup, muscle.muscle_group_id):
+                raise InvalidForeignKeyIDError(f"muscle_group_id: {muscle.muscle_group_id}")
+            if muscle.role.strip() == "":
+                raise EmptyStringError("role")
+    
+    if exercise_data.equipment_id and not db.get(Equipment, exercise_data.equipment_id):
+        raise InvalidForeignKeyIDError(f"equipment_id: {exercise_data.equipment_id}")
+
     
     if exercise_data.name:
         exercise.name = exercise_data.name
