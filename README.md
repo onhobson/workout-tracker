@@ -1,7 +1,7 @@
 # Workout Tracker
 A REST API workout tracker built with FastAPI and SQLAlchemy.
 
-Built to practice backend development concepts including authentication, relational databases, dependency injection, and API testing.
+Built to practice backend development concepts, including authentication, relational databases, dependency injection, and API testing.
 
 Users can create workouts, log sets, and build custom exercises associated with equipment and muscle groups.
 
@@ -123,17 +123,23 @@ POST /exercises
   <img src="docs/er-diagram.svg" width="700">
 </p>
 
-## Installation
+## Installation (Windows)
 
 Clone the repository:
 
-    git clone https://github.com/onhobson/workout-tracker
+    git clone https://github.com/onhobson/workout-tracker  
+
+Change directory:
+
     cd workout-tracker
 
 Create a virtual environment:
 
     python -m venv venv
-    source venv/bin/activate
+  
+Activate virtual environment:
+
+    venv\Scripts\activate
 
 Install dependencies:
 
@@ -143,14 +149,18 @@ Create a .env file in the project root with required environment variables.
 
 Sample .env data:
 
-    SECRET_KEY=31eb5d454345ea013fe98b714c6ac803e40111e1d652faa1e5443e6365a0c660
+    SECRET_KEY="31eb5d454345ea013fe98b714c6ac803e40111e1d652faa1e5443e6365a0c660"
     ALGORITHM="HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES=60
 
 Feel free to replace `SECRET_KEY` with one of your choosing. This one isn't exactly secret anymore.
 
 **Recommended**  
+<<<<<<< fix/readme-installation-errors
+Seed the database with sample data using the terminal command:
+=======
 Seed the database with sample data using terminal command:
+>>>>>>> main
 
     python -m scripts.seed_db_all
 
@@ -158,21 +168,21 @@ Seed the database with sample data using terminal command:
 
 Start the server:  
 
-`uvicorn app.main:app`
+    uvicorn "app.main:app"
 
 Open the interactive docs:
 
-`http://localhost:8000/docs`
+http://localhost:8000/docs
 
 ## Running Tests
 
-Tests use pytest and a separate, in memory, sqlite database.
+Tests use pytest and a separate, in-memory, SQLite database.
 
 In the terminal, run:
 
-`pytest`
+    pytest
 
-The test suite uses a starlette/FastAPI TestClient to mimic the main app and to override dependencies.  
+The test suite uses a Starlette/FastAPI TestClient to mimic the main app and to override dependencies.  
 Fixtures and factory patterns are used to create test data.
 
 
@@ -180,7 +190,7 @@ Fixtures and factory patterns are used to create test data.
 
  - Workout templates
  - Workout history
- - Email based password recovery
+ - Email-based password recovery
  - Frontend (React)
  - Analytics
 
