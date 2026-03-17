@@ -128,13 +128,19 @@ POST /exercises
 
 Clone the repository:
 
-    git clone https://github.com/onhobson/workout-tracker
+    git clone https://github.com/onhobson/workout-tracker  
+
+Change directory:
+
     cd workout-tracker
 
 Create a virtual environment:
 
     python -m venv venv
-    source venv/bin/activate
+  
+Activate virtual environment:
+  
+    venv\Scripts\activate
 
 Install dependencies:
 
@@ -150,15 +156,20 @@ Sample .env data:
 
 Feel free to replace `SECRET_KEY` with one of your choosing. This one isn't exactly secret anymore.
 
+**Recommended**  
+Seed the database with sample data using terminal command:
+
+    python -m scripts.seed_db_all
+
 ## Running the API
 
 Start the server:  
 
-`uvicorn app.main:app`
+    uvicorn "app.main:app"
 
 Open the interactive docs:
 
-`http://localhost:8000/docs`
+http://localhost:8000/docs
 
 ## Running Tests
 
@@ -166,7 +177,7 @@ Tests use pytest and a separate, in memory, sqlite database.
 
 In the terminal, run:
 
-`pytest`
+    pytest
 
 The test suite uses a starlette/FastAPI TestClient to mimic the main app and to override dependencies.  
 Fixtures and factory patterns are used to create test data.
