@@ -26,8 +26,7 @@ Backend
  - FastAPI
 
 Database
- - SQLite (Development)
- - PostgreSQL (Planned)
+ - SQLite (Development, Testing)
 
 Authentication
  - OAuth2 with JWT
@@ -157,7 +156,11 @@ Sample .env data:
 Feel free to replace `SECRET_KEY` with one of your choosing. This one isn't exactly secret anymore.
 
 **Recommended**  
+<<<<<<< fix/readme-installation-errors
 Seed the database with sample data using the terminal command:
+=======
+Seed the database with sample data using terminal command:
+>>>>>>> main
 
     python -m scripts.seed_db_all
 
