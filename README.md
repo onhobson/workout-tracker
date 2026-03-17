@@ -124,7 +124,7 @@ POST /exercises
   <img src="docs/er-diagram.svg" width="700">
 </p>
 
-## Installation
+## Installation (Windows)
 
 Clone the repository:
 
@@ -139,7 +139,7 @@ Create a virtual environment:
     python -m venv venv
   
 Activate virtual environment:
-  
+
     venv\Scripts\activate
 
 Install dependencies:
