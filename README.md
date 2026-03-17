@@ -170,6 +170,9 @@ Open the interactive docs:
 
 http://localhost:8000/docs
 
+*If database was seeded:*  
+Authorize using username: `sampleuser`, password: `12345`
+
 ## Running Tests
 
 Tests use pytest and a separate, in-memory, SQLite database.
