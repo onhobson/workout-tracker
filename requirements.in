@@ -1,7 +1,8 @@
 fastapi
 sqlalchemy
 pydantic
+pydantic-settings
 pyjwt
-pwdlib
+pwdlib[argon2]
 pytest
 uvicorn

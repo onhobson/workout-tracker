@@ -10,14 +10,18 @@ annotated-types==0.7.0
     # via pydantic
 anyio==4.12.1
     # via starlette
+argon2-cffi==25.1.0
+    # via pwdlib
+argon2-cffi-bindings==25.1.0
+    # via argon2-cffi
+cffi==2.0.0
+    # via argon2-cffi-bindings
 click==8.3.1
     # via uvicorn
 colorama==0.4.6
     # via
     #   click
     #   pytest
-email-validator==2.3.0
-    # via pydantic
 fastapi==0.135.1
     # via -r requirements.in
 greenlet==3.3.2
@@ -32,20 +36,29 @@ packaging==26.0
     # via pytest
 pluggy==1.6.0
     # via pytest
-pwdlib==0.3.0
+pwdlib[argon2]==0.3.0
     # via -r requirements.in
+pycparser==3.0
+    # via cffi
 pydantic==2.12.5
     # via
     #   -r requirements.in
     #   fastapi
+    #   pydantic-settings
 pydantic-core==2.41.5
     # via pydantic
+pydantic-settings==2.13.1
+    # via -r requirements.in
 pygments==2.19.2
     # via pytest
 pyjwt==2.12.1
     # via -r requirements.in
 pytest==9.0.2
     # via -r requirements.in
+python-dotenv==1.2.2
+    # via pydantic-settings
+python-multipart==0.0.22
+    # via starlette
 sqlalchemy==2.0.48
     # via -r requirements.in
 starlette==0.52.1
@@ -61,5 +74,6 @@ typing-inspection==0.4.2
     # via
     #   fastapi
     #   pydantic
+    #   pydantic-settings
 uvicorn==0.42.0
     # via -r requirements.in
