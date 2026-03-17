@@ -1,7 +1,7 @@
 # Workout Tracker
 A REST API workout tracker built with FastAPI and SQLAlchemy.
 
-Built to practice backend development concepts including authentication, relational databases, dependency injection, and API testing.
+Built to practice backend development concepts, including authentication, relational databases, dependency injection, and API testing.
 
 Users can create workouts, log sets, and build custom exercises associated with equipment and muscle groups.
 
@@ -157,7 +157,7 @@ Sample .env data:
 Feel free to replace `SECRET_KEY` with one of your choosing. This one isn't exactly secret anymore.
 
 **Recommended**  
-Seed the database with sample data using terminal command:
+Seed the database with sample data using the terminal command:
 
     python -m scripts.seed_db_all
 
@@ -173,13 +173,13 @@ http://localhost:8000/docs
 
 ## Running Tests
 
-Tests use pytest and a separate, in memory, sqlite database.
+Tests use pytest and a separate, in-memory, SQLite database.
 
 In the terminal, run:
 
     pytest
 
-The test suite uses a starlette/FastAPI TestClient to mimic the main app and to override dependencies.  
+The test suite uses a Starlette/FastAPI TestClient to mimic the main app and to override dependencies.  
 Fixtures and factory patterns are used to create test data.
 
 
@@ -187,7 +187,7 @@ Fixtures and factory patterns are used to create test data.
 
  - Workout templates
  - Workout history
- - Email based password recovery
+ - Email-based password recovery
  - Frontend (React)
  - Analytics
 
