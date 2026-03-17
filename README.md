@@ -26,8 +26,7 @@ Backend
  - FastAPI
 
 Database
- - SQLite (Development)
- - PostgreSQL (Planned)
+ - SQLite (Development, Testing)
 
 Authentication
  - OAuth2 with JWT
@@ -149,6 +148,11 @@ Sample .env data:
     ACCESS_TOKEN_EXPIRE_MINUTES=60
 
 Feel free to replace `SECRET_KEY` with one of your choosing. This one isn't exactly secret anymore.
+
+**Recommended**  
+Seed the database with sample data using terminal command:
+
+    python -m scripts.seed_db_all
 
 ## Running the API
 
