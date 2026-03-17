@@ -150,7 +150,7 @@ Create a .env file in the project root with required environment variables.
 
 Sample .env data:
 
-    SECRET_KEY=31eb5d454345ea013fe98b714c6ac803e40111e1d652faa1e5443e6365a0c660
+    SECRET_KEY="31eb5d454345ea013fe98b714c6ac803e40111e1d652faa1e5443e6365a0c660"
     ALGORITHM="HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES=60
 
