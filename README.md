@@ -29,7 +29,7 @@ Database
  - SQLite (Development, Testing)
 
 Authentication
- - OAuth2 with JWT
+ - User authentication with JWT
  - Hashing with pwdlib
 
 Validation
