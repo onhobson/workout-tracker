@@ -7,6 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from app.core.limits import EXERCISE_NAME_MAX_LENGTH
 from app.schemas.common import ExerciseMuscleSummary, EquipmentSummary
+from app.db.enums import MuscleRole
 
 class ExerciseBase(BaseModel):
     name: Annotated[str, Field(
@@ -19,7 +20,7 @@ class ExerciseBase(BaseModel):
 
 class ExerciseMuscleCreate(BaseModel):
     muscle_group_id: Annotated[int , Field(ge=0)]
-    role: str
+    role: MuscleRole
 
 
 class ExerciseCreate(ExerciseBase):
