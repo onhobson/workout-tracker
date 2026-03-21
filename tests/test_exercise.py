@@ -355,7 +355,7 @@ class TestCreateExercise():
 
         assert response.status_code == 422
 
-        assert response.json()["detail"] == "Role can not be empty"
+        assert response.json()["detail"][0]["type"] == "enum"
 
 
     def test_create_exercise_muscle_group_role_whitespace(self, auth_client: TestClient, equipment_factory, muscle_factory):
@@ -376,7 +376,7 @@ class TestCreateExercise():
 
         assert response.status_code == 422
 
-        assert response.json()["detail"] == "Role can not be empty"
+        assert response.json()["detail"][0]["type"] == "enum"
 
     
     def test_create_exercise_no_muscle_groups(self, auth_client: TestClient, equipment_factory):
@@ -535,8 +535,8 @@ class TestUpdateExercise():
         )
 
         assert response.status_code == 422
-        assert response.json()["detail"] == "Role can not be empty"
-
+        
+        assert response.json()["detail"][0]["type"] == "enum"
 
     def test_update_exercise_other_users_exercise(self, auth_client: TestClient, exercise_factory):
         exercise = exercise_factory(
