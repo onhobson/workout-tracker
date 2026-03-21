@@ -4,11 +4,12 @@ SQLAlchemy models for the workout tracker application.
 from datetime import datetime
 from typing import List
 
-from sqlalchemy import CheckConstraint, DateTime, ForeignKey, UniqueConstraint, create_engine, func, String
+from sqlalchemy import CheckConstraint, DateTime, Enum, ForeignKey, UniqueConstraint, create_engine, func, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 import app.core.limits as LIMIT
 from app.db.constraints import range_constraint
+from app.db.enums import InputMode, MuscleRole
 
 class Base(DeclarativeBase):
     pass
@@ -134,7 +135,7 @@ class Equipment(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
 
     name: Mapped[str] = mapped_column(unique=True, nullable=False)
-    input_mode: Mapped[str] = mapped_column(nullable=False)
+    input_mode: Mapped[InputMode] = mapped_column(Enum(InputMode), nullable=False)
 
 
 class MuscleGroup(Base):
@@ -160,7 +161,7 @@ class ExerciseMuscleGroup(Base):
         primary_key=True,
     )
 
-    role: Mapped[str] = mapped_column(nullable=False)
+    role: Mapped[MuscleRole] = mapped_column(Enum(MuscleRole), nullable=False)
 
     exercise: Mapped["Exercise"] = relationship(back_populates="muscles")
     muscle: Mapped["MuscleGroup"] = relationship(back_populates="exercises")

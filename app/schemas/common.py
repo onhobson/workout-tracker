@@ -3,6 +3,8 @@ Common summary schemas for the workout tracker application.
 """
 from pydantic import BaseModel, ConfigDict
 
+from app.db.enums import MuscleRole
+
 class ExerciseSummary(BaseModel):
     id: int
     name: str
@@ -26,6 +28,6 @@ class EquipmentSummary(BaseModel):
 
 class ExerciseMuscleSummary(BaseModel):
     muscle: MuscleGroupSummary
-    role: str
+    role: MuscleRole
 
     model_config = ConfigDict(from_attributes=True)
